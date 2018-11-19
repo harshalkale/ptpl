@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "formType": "HOUSING",
+      "name": "coApplicant",
+      "section": 1,
+      "sequenceNo": 1,
+      "label": "Co-applicant",
+      "type": "select",
+      "options": [
+        {
+          "sequenceNo": 1,
+          "label": "YES",
+          "value": "YES"
+        },
+        {
+          "sequenceNo": 2,
+          "label": "NO",
+          "value": "NO"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "sectionId": 2,
+      "sequenceNo": 6
+    }
+  ]
+}

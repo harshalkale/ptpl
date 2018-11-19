@@ -1,0 +1,16 @@
+{
+  "prod": {},
+  "development": {
+    "DB": {
+      "HOST": "localhost",
+      "PORT": "27017",
+      "NAME": "loan-applications"
+    },
+    "MONGOOSE_DATATABLE": {
+      "OPTIONS": {
+        "debug": true,
+        "verbose": true
+      }
+    }
+  }
+}

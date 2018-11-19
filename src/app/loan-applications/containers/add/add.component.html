@@ -1,0 +1,542 @@
+<div class="container">
+
+  <form [formGroup]="applicationForm">
+
+    <div class="text-muted mt-1">
+      <small>
+        <i class="fa fa-asterisk text-danger"></i> - Required
+      </small>
+    </div>
+
+    <div class="d-md-none d-sm-block my-2">
+      <div class="row">
+        <div class="col-md-9">
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary shadow btn-block" type="submit" [disabled]="applicationForm.invalid">
+            <i class="fa fa-check"></i>
+            <span class="mx-3">Submit application</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow my-2">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="txt-loan-application-no">
+                <small>
+                  <i class="fa fa-asterisk text-danger"></i>
+                </small>
+                Loan Application No.
+              </label>
+              <input type="text" id="txt-loan-application-no" name="loan-application-no" formControlName="loanApplicationNo" class="form-control"
+                [ngClass]="{'is-invalid': applicationForm.controls.loanApplicationNo.dirty && applicationForm.controls.loanApplicationNo.invalid, 'is-valid': applicationForm.controls.loanApplicationNo.dirty && applicationForm.controls.loanApplicationNo.valid}">
+              <div class="invalid-feedback">Please enter the
+                <b>Loan Application No.</b>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-application-type">
+                Application Type
+              </label>
+              <select id="ddl-application-type" name="application-type" formControlName="applicationType" class="form-control" [ngClass]="{'is-invalid': applicationForm.controls.applicationType.dirty && applicationForm.controls.applicationType.invalid, 'is-valid': applicationForm.controls.applicationType.dirty && applicationForm.controls.applicationType.valid}"
+                (change)="changeApplicationType($event)">
+                <option *ngFor="let applicationTypeName of applicationTypes; let i = index" value="{{applicationTypeName}}">{{applicationTypeName}}</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4 d-md-block d-none">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary shadow btn-block" type="submit" [disabled]="applicationForm.invalid">
+              <i class="fa fa-check"></i>
+              <span class="mx-3">Submit application</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="row">
+        <div class="col-3 my-auto">
+          <button class="btn btn-secondary shadow btn-small btn-block" (click)="prevSection()" [disabled]="currentSectionIdx === 0">
+            <i class="fa fa-arrow-left"></i>
+            <span class="mx-3 d-none d-md-inline">Previous</span>
+          </button>
+        </div>
+        <div class="col-6 my-auto text-center">
+          <h3>{{sections[currentSectionIdx]}}</h3>
+        </div>
+        <div class="col-3 my-auto">
+          <button class="btn btn-secondary shadow btn-small btn-block" (click)="nextSection()" [disabled]="currentSectionIdx === sections.length - 1">
+            <span class="mx-3 d-none d-md-inline">Next</span>
+            <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow my-2">
+
+      <!-- Personal -->
+      <div class="card-body" [hidden]="currentSectionIdx !== 0">
+
+        <p class="lead text-secondary">Name of the Applicant</p>
+        <div class="row" formGroupName="applicantData">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="ddl-name-title">
+                <small>
+                  <i class="fa fa-asterisk text-danger"></i>
+                </small>
+                Title
+              </label>
+              <select id="ddl-name-title" name="title" formControlName="title" class="form-control" [ngClass]="{'is-invalid': applicantData.controls.title.dirty && applicantData.controls.title.invalid, 'is-valid': applicantData.controls.title.dirty && applicantData.controls.title.valid}">
+                <option value=""></option>
+                <option value="MR.">MR.</option>
+                <option value="MRS.">MRS.</option>
+                <option value="MS.">MS.</option>
+              </select>
+              <div class="invalid-feedback">Please select a
+                <b>Title</b>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="txt-name-first">
+                <small>
+                  <i class="fa fa-asterisk text-danger"></i>
+                </small>
+                First Name
+              </label>
+              <input type="text" class="form-control" [ngClass]="{'is-invalid': applicantData.controls.firstName.dirty && applicantData.controls.firstName.invalid, 'is-valid': applicantData.controls.firstName.dirty && applicantData.controls.firstName.valid}"
+                id="txt-name-first" name="first-name" formControlName="firstName">
+              <div class="invalid-feedback">Please enter the
+                <b>First Name</b>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="txt-name-middle">
+                Middle Name
+              </label>
+              <input type="text" class="form-control" [ngClass]="{'is-invalid': applicantData.controls.middleName.dirty && applicantData.controls.middleName.invalid, 'is-valid': applicantData.controls.middleName.dirty && applicantData.controls.middleName.valid}"
+                id="txt-name-middle" name="middle-name" formControlName="middleName">
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="txt-name-last">
+                <small>
+                  <i class="fa fa-asterisk text-danger"></i>
+                </small>
+                Last Name
+              </label>
+              <input type="text" class="form-control" [ngClass]="{'is-invalid': applicantData.controls.lastName.dirty && applicantData.controls.lastName.invalid, 'is-valid': applicantData.controls.lastName.dirty && applicantData.controls.lastName.valid}"
+                id="txt-name-last" name="last-name" formControlName="lastName">
+              <div class="invalid-feedback">Please enter the
+                <b>Last Name</b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row" formGroupName="otherData">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-co-applicant">Co-applicant</label>
+              <select name="co-applicant" formControlName="coApplicant" id="ddl-co-applicant" class="form-control" [ngClass]="{'is-invalid': otherData.controls.coApplicant.dirty && otherData.controls.coApplicant.invalid, 'is-valid': otherData.controls.coApplicant.dirty && otherData.controls.coApplicant.valid}">
+                <option value=""></option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-age-criteria">Age criteria</label>
+              <select name="age-criteria" formControlName="ageCriteria" id="ddl-age-criteria" class="form-control" [ngClass]="{'is-invalid': otherData.controls.ageCriteria.dirty && otherData.controls.ageCriteria.invalid, 'is-valid': otherData.controls.ageCriteria.dirty && otherData.controls.ageCriteria.valid}">
+                <option value=""></option>
+                <option value="> 20- 25 YEARS">&gt; 20- 25 YEARS</option>
+                <option value="> 25- 30 YEARS">&gt; 25- 30 YEARS</option>
+                <option value="> 30- 45 YEARS">&gt; 30- 45 YEARS</option>
+                <option value="> 45- 55 YEARS">&gt; 45- 55 YEARS</option>
+                <option value="> 55- 65 YEARS">&gt; 55- 65 YEARS</option>
+                <option value="AGE ABOVE 65 YEARS">AGE ABOVE 65 YEARS</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-educational-qualification">Educational Qualification</label>
+              <select name="educational-qualification" formControlName="educationalQualification" id="ddl-educational-qualification" class="form-control"
+                [ngClass]="{'is-invalid': otherData.controls.educationalQualification.dirty && otherData.controls.educationalQualification.invalid, 'is-valid': otherData.controls.educationalQualification.dirty && otherData.controls.educationalQualification.valid}">
+                <option value=""></option>
+                <option value="POST GRADUATE / PROFFESSIONAL">POST GRADUATE / PROFFESSIONAL</option>
+                <option value="GRADUATE">GRADUATE</option>
+                <option value="UNDER GRADUATE">UNDER GRADUATE</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-designation">Designation</label>
+              <select name="designation" formControlName="designation" id="ddl-designation" class="form-control" [ngClass]="{'is-invalid': otherData.controls.designation.dirty && otherData.controls.designation.invalid, 'is-valid': otherData.controls.designation.dirty && otherData.controls.designation.valid}"
+                (change)="changePersonType($event)">
+                <option value=""></option>
+                <optgroup label="SALARIED">
+                  <option value="EXECUTIVE / SENIOR MANAGER">EXECUTIVE / SENIOR MANAGER</option>
+                  <option value="OFFICER">OFFICER</option>
+                  <option value="SALARIED-OTHERS">OTHERS (SALARIED)</option>
+                </optgroup>
+                <optgroup label="SELF-EMPLOYED / PROFESSIONALS">
+                  <option value="MAJORITY STAKEHOLDER OF THE CONCERN">MAJORITY STAKEHOLDER OF THE CONCERN</option>
+                  <option value="MINORITY STAKEHOLDER">MINORITY STAKEHOLDER</option>
+                  <option value="SELF-EMPLOYED / PROFESSIONALS-OTHERS">OTHERS (SELF-EMPLOYED / PROFESSIONALS)</option>
+                </optgroup>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-family-composition-dependant">Family Composition/Dependent</label>
+              <select name="family-composition-dependant" formControlName="familyCompositionDependant" id="ddl-family-composition-dependant"
+                class="form-control" [ngClass]="{'is-invalid': otherData.controls.familyCompositionDependant.dirty && otherData.controls.familyCompositionDependant.invalid, 'is-valid': otherData.controls.familyCompositionDependant.dirty && otherData.controls.familyCompositionDependant.valid}">
+                <option value=""></option>
+                <option value="DEPENDENTS UPTO 2">DEPENDENTS UPTO 2</option>
+                <option value="DEPENDENTS > 2-4">DEPENDENTS > 2-4</option>
+                <option value="DEPENDENTS > 4">DEPENDENTS > 4</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Other -->
+      <div class="card-body" [hidden]="currentSectionIdx !== 1" formGroupName="otherData">
+
+        <p class="lead text-secondary">Net Worth</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-property-owned">Property Owned</label>
+              <select name="property-owned" formControlName="propertyOwned" id="ddl-property-owned" class="form-control" [ngClass]="{'is-invalid': otherData.controls.propertyOwned.dirty && otherData.controls.propertyOwned.invalid, 'is-valid': otherData.controls.propertyOwned.dirty && otherData.controls.propertyOwned.valid}">
+                <option value=""></option>
+                <option value="OWNING A HOUSE - NOT MORTGAGED">OWNING A HOUSE - NOT MORTGAGED</option>
+                <option value="OWNING A HOUSE - NOT MORTGAGED -AT OTHER PLACE">OWNING A HOUSE - NOT MORTGAGED -AT OTHER PLACE</option>
+                <option value="OWNING A HOUSE - MORTGAGED - IN THE SAME PLACE">OWNING A HOUSE - MORTGAGED - IN THE SAME PLACE</option>
+                <option value="OWNING A HOUSE - MORTGAGED  - AT OTHER PLACE">OWNING A HOUSE - MORTGAGED - AT OTHER PLACE</option>
+                <option value="HOUSE IS OWNED BY SPOUSE">HOUSE IS OWNED BY SPOUSE</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-vehicles-owned">Vehicles Owned</label>
+              <select name="vehicles-owned" formControlName="vehiclesOwned" id="ddl-vehicles-owned" class="form-control" [ngClass]="{'is-invalid': otherData.controls.vehiclesOwned.dirty && otherData.controls.vehiclesOwned.invalid, 'is-valid': otherData.controls.vehiclesOwned.dirty && otherData.controls.vehiclesOwned.valid}">
+                <option value=""></option>
+                <option value="FOUR WHEELER - FULLY OWNED/CAR">FOUR WHEELER - FULLY OWNED/CAR</option>
+                <option value="FOUR WHEELER - HYPOTHECATED">FOUR WHEELER - HYPOTHECATED</option>
+                <option value="TWO WHEELER - FULLY OWNED/HYPOTHECATED">TWO WHEELER - FULLY OWNED/HYPOTHECATED</option>
+                <option value="DOES NOT OWN A VEHICLE">DOES NOT OWN A VEHICLE</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-net-assets">Net Assets</label>
+              <select name="net-assets" formControlName="netAssets" id="ddl-net-assets" class="form-control" [ngClass]="{'is-invalid': otherData.controls.netAssets.dirty && otherData.controls.netAssets.invalid, 'is-valid': otherData.controls.netAssets.dirty && otherData.controls.netAssets.valid}">
+                <option value=""></option>
+                <option value="MARKET VALUE > 400000/-">MARKET VALUE > 400000/-</option>
+                <option value="MARKET VALUE > 300000/-">MARKET VALUE > 300000/-</option>
+                <option value="MARKET VALUE > 200000/-">MARKET VALUE > 200000/-</option>
+                <option value="MARKET VALUE > 100000/-">MARKET VALUE > 100000/-</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-deposit-position-potential">Deposit Position/Potential</label>
+              <select name="deposit-position-potential" formControlName="depositPositionPotential" id="ddl-deposit-position-potential"
+                class="form-control" [ngClass]="{'is-invalid': otherData.controls.depositPositionPotential.dirty && otherData.controls.depositPositionPotential.invalid, 'is-valid': otherData.controls.depositPositionPotential.dirty && otherData.controls.depositPositionPotential.valid}">
+                <option value=""></option>
+                <option value="AVERAGE DEPOSIT LAST 1 YEAR > 20000/-">AVERAGE DEPOSIT LAST 1 YEAR > 20000/-</option>
+                <option value="AVERAGE DEPOSIT LAST 1 YEAR > 15000 - 20000/-">AVERAGE DEPOSIT LAST 1 YEAR > 15000 - 20000/-</option>
+                <option value="AVERAGE DEPOSIT LAST 1 YEAR > 10000 - 15000/-">AVERAGE DEPOSIT LAST 1 YEAR > 10000 - 15000/-</option>
+                <option value="AVERAGE DEPOSIT LAST 1 YEAR > 5000 - 10000/-">AVERAGE DEPOSIT LAST 1 YEAR > 5000 - 10000/-</option>
+                <option value="AVERAGE DEPOSIT LAST 1 YEAR RS.5000 OR LESS">AVERAGE DEPOSIT LAST 1 YEAR RS.5000 OR LESS</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-existing-borrowing-arra">Existing Borrowing ARRA</label>
+              <select name="existing-borrowing-arra" formControlName="existingBorrowingArra" id="ddl-existing-borrowing-arra" class="form-control"
+                [ngClass]="{'is-invalid': otherData.controls.existingBorrowingArra.dirty && otherData.controls.existingBorrowingArra.invalid, 'is-valid': otherData.controls.existingBorrowingArra.dirty && otherData.controls.existingBorrowingArra.valid}">
+                <option value=""></option>
+                <option value="BANK'S BORROWER - STANDARD ASSET">BANK'S BORROWER - STANDARD ASSET</option>
+                <option value="OTHER BANK/INSTITUTION'S BORROWER - NO DEFAULT">OTHER BANK/INSTITUTION'S BORROWER - NO DEFAULT</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-recovery-of-installments">Recovery of Installments</label>
+              <select name="recovery-of-installments" formControlName="recoveryOfInstallments" id="ddl-recovery-of-installments" class="form-control"
+                [ngClass]="{'is-invalid': otherData.controls.recoveryOfInstallments.dirty && otherData.controls.recoveryOfInstallments.invalid, 'is-valid': otherData.controls.recoveryOfInstallments.dirty && otherData.controls.recoveryOfInstallments.valid}">
+                <option value=""></option>
+                <option value="EMPLOYER AGREEABLE FOR SALARY DEDUCTION">EMPLOYER AGREEABLE FOR SALARY DEDUCTION</option>
+                <option value="EMPLOYER NOT AGREEABLE FOR SALARY DEDUCTION">EMPLOYER NOT AGREEABLE FOR SALARY DEDUCTION</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Occu & Inc -->
+      <div class="card-body" [hidden]="currentSectionIdx !== 2" formGroupName="otherData">
+
+        <p class="lead text-secondary">Occupation</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-length-of-service">Length of Service</label>
+              <select name="length-of-service" formControlName="lengthOfService" [attr.disabled]="currentPersonTypeIdx !== '0'? 'disabled' : null"
+                id="ddl-length-of-service" class="form-control" [ngClass]="{'is-invalid': otherData.controls.lengthOfService.dirty && otherData.controls.lengthOfService.invalid, 'is-valid': otherData.controls.lengthOfService.dirty && otherData.controls.lengthOfService.valid}">
+                <option value=""></option>
+                <option value="ABOVE 8 YEARS IN THE CURRENT EMPLOYMENT">ABOVE 8 YEARS IN THE CURRENT EMPLOYMENT</option>
+                <option value="> 5 - 8 YEARS IN CURRENT EMPLOYMENT">&gt; 5 - 8 YEARS IN CURRENT EMPLOYMENT</option>
+                <option value="> 2 - 5 YEARS IN CURRENT EMPLOYMENT">&gt; 2 - 5 YEARS IN CURRENT EMPLOYMENT</option>
+                <option value="UPTO 2 YEARS IN CURRENT EMPLOYMENT">UPTO 2 YEARS IN CURRENT EMPLOYMENT</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-period-in-business-profession">Period in Business/Profession</label>
+              <select name="period-in-business-profession" formControlName="periodInBusinessProfession" id="ddl-period-in-business-profession"
+                [attr.disabled]="currentPersonTypeIdx !== '1'? 'disabled' : null" class="form-control" [ngClass]="{'is-invalid': otherData.controls.periodInBusinessProfession.dirty && otherData.controls.periodInBusinessProfession.invalid, 'is-valid': otherData.controls.periodInBusinessProfession.dirty && otherData.controls.periodInBusinessProfession.valid}">
+                <option value=""></option>
+                <option value="ABOVE 5 YEARS">ABOVE 5 YEARS</option>
+                <option value="> 3 - 5 YEARS">&gt; 3 - 5 YEARS</option>
+                <option value="> 1 - 3 YEARS">&gt; 1 - 3 YEARS</option>
+                <option value="UPTO 1 YEAR">UPTO 1 YEAR</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-employment-details">Employment Details</label>
+              <select name="employment-details" formControlName="employmentDetails" id="ddl-employment-details" class="form-control" [ngClass]="{'is-invalid': otherData.controls.employmentDetails.dirty && otherData.controls.employmentDetails.invalid, 'is-valid': otherData.controls.employmentDetails.dirty && otherData.controls.employmentDetails.valid}">
+                <option value=""></option>
+                <optgroup label="SALARIED" [disabled]="currentPersonTypeIdx !== '0'">
+                  <option value="PSUS/BANKS/INSURANCE COMPANIES">PSUS/BANKS/INSURANCE COMPANIES</option>
+                  <option value="MULTINATIONAL COMPANIES">MULTINATIONAL COMPANIES</option>
+                  <option value="GOVT. (STATE/CENTRAL)DEPTS.">GOVT. (STATE/CENTRAL)DEPTS.</option>
+                  <option value="OTHER CORPORATES (LISTED COMPANIES)">OTHER CORPORATES (LISTED COMPANIES)</option>
+                  <option value="SMALL SECTOR (PVT LTD/PARTNERSHIP/PROPRIETORSH)">SMALL SECTOR (PVT LTD/PARTNERSHIP/PROPRIETORSH)</option>
+                  <option value="UNORGANISED SECTOR">UNORGANISED SECTOR</option>
+                </optgroup>
+                <optgroup label="SELF-EMPLOYED / PROFESSIONALS" [disabled]="currentPersonTypeIdx !== '1'">
+                  <option value="DOCTOR (MD/MS ETC.)/CA/ARCHITECT">DOCTOR (MD/MS ETC.)/CA/ARCHITECT</option>
+                  <option value="LAWYER/ICWA/DOCTORS(MBBS/BDS ETC.)/OTHERS">LAWYER/ICWA/DOCTORS(MBBS/BDS ETC.)/OTHERS</option>
+                  <option value="BIG BUSINESS OPERATOR (INDUSTRY/TRADE TURNOVER)">BIG BUSINESS OPERATOR (INDUSTRY/TRADE TURNOVER)</option>
+                  <option value="SMALL BUSINESS/SHOP OWNER (INDUSTRY/TRADE ">SMALL BUSINESS/SHOP OWNER (INDUSTRY/TRADE </option>
+                  <option value="SMALL BUSINESS/SHOP OWNER (TURNOVER UPTO 20) ">SMALL BUSINESS/SHOP OWNER (TURNOVER UPTO 20) </option>
+                </optgroup>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <p class="lead text-secondary">Income</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-own-income">Own Income</label>
+              <select name="own-income" formControlName="ownIncome" id="ddl-own-income" class="form-control" [ngClass]="{'is-invalid': otherData.controls.ownIncome.dirty && otherData.controls.ownIncome.invalid, 'is-valid': otherData.controls.ownIncome.dirty && otherData.controls.ownIncome.valid}">
+                <option value=""></option>
+                <option value="NET ANNUAL INCOME OF RS.5 LACS & ABOVE">NET ANNUAL INCOME OF RS.5 LACS &amp; ABOVE</option>
+                <option value="NET ANNUAL INCOME OF RS.2.50 LACS & ABOVE BUT < 5 LACS">NET ANNUAL INCOME OF RS.2.50 LACS &amp; ABOVE BUT &lt; 5 LACS</option>
+                <option value="NET ANNUAL INCOME OF RS.1.25 LACS & ABOVE BUT < 2.50 LACS">NET ANNUAL INCOME OF RS.1.25 LACS &amp; ABOVE BUT &lt; 2.50 LACS</option>
+                <option value="NET ANNUAL INCOME OF RS.80000/- & ABOVE BUT <  1.25 LACS">NET ANNUAL INCOME OF RS.80000/- &amp; ABOVE BUT &lt; 1.25 LACS</option>
+                <option value="NET ANNUAL INCOME < RS.80000/- ">NET ANNUAL INCOME &lt; RS.80000/- </option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-spouses-income">Spouse’s Income (Gross)</label>
+              <select name="spouses-income" formControlName="spousesIncome" id="ddl-spouses-income" class="form-control" [ngClass]="{'is-invalid': otherData.controls.spousesIncome.dirty && otherData.controls.spousesIncome.invalid, 'is-valid': otherData.controls.spousesIncome.dirty && otherData.controls.spousesIncome.valid}">
+                <option value=""></option>
+                <option value="2.50 LACS & ABOVE">2.50 LACS &amp; ABOVE</option>
+                <option value="1.25 LACS & ABOVE BUT < 2.50 LACS">1.25 LACS &amp; ABOVE BUT &lt; 2.50 LACS</option>
+                <option value="BELOW RS.1.25 LACS">BELOW RS.1.25 LACS</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-installment-to-income-ratio">Installment to Income Ratio</label>
+              <select name="installment-to-income-ratio" formControlName="installmentToIncomeRatio" id="ddl-installment-to-income-ratio"
+                class="form-control" [ngClass]="{'is-invalid': otherData.controls.installmentToIncomeRatio.dirty && otherData.controls.installmentToIncomeRatio.invalid, 'is-valid': otherData.controls.installmentToIncomeRatio.dirty && otherData.controls.installmentToIncomeRatio.valid}">
+                <option value=""></option>
+                <option value="< 20%">&lt; 20%</option>
+                <option value="< 30%">&lt; 30%</option>
+                <option value="UPTO 40%">UPTO 40%</option>
+                <option value="> 40% & UPTO 50%">&gt; 40% & UPTO 50%</option>
+                <option value="> 50%">&gt; 50%</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scheme Specific -->
+      <div class="card-body" [hidden]="currentSectionIdx !== 3" formGroupName="otherData">
+
+        <div class="row" [hidden]="currentApplicationTypeIdx !== 0">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-type-of-vehicle">Type of Vehicle</label>
+              <select name="type-of-vehicle" formControlName="typeOfVehicle" id="ddl-type-of-vehicle" class="form-control" [ngClass]="{'is-invalid': otherData.controls.typeOfVehicle.dirty && otherData.controls.typeOfVehicle.invalid, 'is-valid': otherData.controls.typeOfVehicle.dirty && otherData.controls.typeOfVehicle.valid}">
+                <option value=""></option>
+                <option value="FOREIGN BRAND - MERCEDES, BMW,">FOREIGN BRAND - MERCEDES, BMW,</option>
+                <option value="MARUTI, TOYOTA, VOLKS WAGEN, MAHINDRA.TATA HYUNDAI, HONDA">MARUTI, TOYOTA, VOLKS WAGEN, MAHINDRA.TATA HYUNDAI, HONDA</option>
+                <option value="OTHERS BRAND">OTHERS BRAND</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-value-of-vehicle">Value of Vehicle</label>
+              <select name="value-of-vehicle" formControlName="valueOfVehicle" id="ddl-value-of-vehicle" class="form-control" [ngClass]="{'is-invalid': otherData.controls.valueOfVehicle.dirty && otherData.controls.valueOfVehicle.invalid, 'is-valid': otherData.controls.valueOfVehicle.dirty && otherData.controls.valueOfVehicle.valid}">
+                <option value=""></option>
+                <option value="50 % MARGIN">50 % MARGIN</option>
+                <option value="40 % MARGIN">40 % MARGIN</option>
+                <option value="25 % MARGIN">25 % MARGIN</option>
+                <option value="10 % MARGIN">10 % MARGIN</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-v-repayment">Repayment</label>
+              <select name="v-repayment" formControlName="vRepayment" id="ddl-v-repayment" class="form-control" [ngClass]="{'is-invalid': otherData.controls.vRepayment.dirty && otherData.controls.vRepayment.invalid, 'is-valid': otherData.controls.vRepayment.dirty && otherData.controls.vRepayment.valid}">
+                <option value=""></option>
+                <option value="UPTO 3 YEARS">UPTO 3 YEARS</option>
+                <option value="ABOVE 3 YEARS">ABOVE 3 YEARS</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-v-purpose-of-loan">Purpose of Loan</label>
+              <select name="v-purpose-of-loan" formControlName="vPurposeOfLoan" id="ddl-v-purpose-of-loan" class="form-control" [ngClass]="{'is-invalid': otherData.controls.vPurposeOfLoan.dirty && otherData.controls.vPurposeOfLoan.invalid, 'is-valid': otherData.controls.vPurposeOfLoan.dirty && otherData.controls.vPurposeOfLoan.valid}">
+                <option value=""></option>
+                <option value="PRODUCTIVE">PRODUCTIVE</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" [hidden]="currentApplicationTypeIdx !== 1">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-location-of-the-property">Location of the Property</label>
+              <select name="location-of-the-property" formControlName="locationOfTheProperty" id="ddl-location-of-the-property" class="form-control"
+                [ngClass]="{'is-invalid': otherData.controls.locationOfTheProperty.dirty && otherData.controls.locationOfTheProperty.invalid, 'is-valid': otherData.controls.locationOfTheProperty.dirty && otherData.controls.locationOfTheProperty.valid}">
+                <option value=""></option>
+                <option value="METRO">METRO</option>
+                <option value="URBAN">URBAN</option>
+                <option value="SEMI-URBAN">SEMI-URBAN</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-value-of-the-property">Value of the Property</label>
+              <select name="value-of-the-property" formControlName="valueOfTheProperty" id="ddl-value-of-the-property" class="form-control"
+                [ngClass]="{'is-invalid': otherData.controls.valueOfTheProperty.dirty && otherData.controls.valueOfTheProperty.invalid, 'is-valid': otherData.controls.valueOfTheProperty.dirty && otherData.controls.valueOfTheProperty.valid}">
+                <option value=""></option>
+                <option value="> 5 TIMES OF THE LOAN AMOUNT">&gt; 5 TIMES OF THE LOAN AMOUNT</option>
+                <option value="> 4 UPTO 5 TIMES OF LOAN AMOUNT">&gt; 4 UPTO 5 TIMES OF LOAN AMOUNT</option>
+                <option value="> 3 UPTO 4 TIMES OF LOAN AMOUNT">&gt; 3 UPTO 4 TIMES OF LOAN AMOUNT</option>
+                <option value="> 2 UPTO 3 TIMES OF LOAN AMOUNT">&gt; 2 UPTO 3 TIMES OF LOAN AMOUNT</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-h-repayment">Repayment</label>
+              <select name="h-repayment" formControlName="hRepayment" id="ddl-h-repayment" class="form-control" [ngClass]="{'is-invalid': otherData.controls.hRepayment.dirty && otherData.controls.hRepayment.invalid, 'is-valid': otherData.controls.hRepayment.dirty && otherData.controls.hRepayment.valid}">
+                <option value=""></option>
+                <option value="UPTO 3 YEARS">UPTO 3 YEARS</option>
+                <option value="ABOVE 3 YEARS/OD">ABOVE 3 YEARS/OD</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="ddl-h-purpose-of-loan">Purpose of Loan</label>
+              <select name="h-purpose-of-loan" formControlName="hPurposeOfLoan" id="ddl-h-purpose-of-loan" class="form-control" [ngClass]="{'is-invalid': otherData.controls.hPurposeOfLoan.dirty && otherData.controls.hPurposeOfLoan.invalid, 'is-valid': otherData.controls.hPurposeOfLoan.dirty && otherData.controls.hPurposeOfLoan.valid}">
+                <option value=""></option>
+                <option value="PRODUCTIVE">PRODUCTIVE</option>
+                <option value="CONSUMPTION">CONSUMPTION</option>
+              </select>
+              <div class="invalid-feedback"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+
+  </form>
+
+  <pre>{{applicationForm.value | json}}</pre>
+
+</div>

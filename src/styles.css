@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~font-awesome/css/font-awesome.min.css';
+@import '~datatables.net-dt/css/jquery.dataTables.css';
+
+/* [FIX] App body margin for small devices */
+@media (max-width: 991.98px) {
+  .app-body {
+    margin-top: 0px !important;
+  }
+}
+
+/* [FIX] Removed unnecessary dropdown padding */
+.dropdown-menu {
+  padding-top: 0px !important;
+}
+
+/* [FIX] Datatables width to fit */
+table.table {
+  min-width: 100% !important;
+}
+
+table.table tfoot {
+  display: table-header-group;
+}
+
+/* [FIX] App header a-side menu toggler hidden */
+header.app-header.navbar > button[appasidemenutoggler] {
+  display: none !important;
+}

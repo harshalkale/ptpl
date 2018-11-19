@@ -1,0 +1,5 @@
+{
+  "verbose": true,
+  "watch": "./api",
+  "ignore": ["node_modules/*", "./api/node_modules/*"]
+}
