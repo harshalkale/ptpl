@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SectionService } from '../../../../../../../shared/services/section/section.service';
+import { UserService } from '../../../../../shared/services/user/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit {
-  constructor(private service: SectionService, private router: Router) {}
+  constructor(private service: UserService, private router: Router) {}
 
   ngOnInit() {}
 
   submitForm = formValue => {
     this.service.update(formValue).subscribe(() => {
-      this.router.navigate(['configurations/loan-application/sections']);
+      this.router.navigate(['security/users']);
     });
   };
 }

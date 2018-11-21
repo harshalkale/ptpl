@@ -9,9 +9,11 @@ export const navItems = [
     // }
   },
   {
+    divider: true
+  },
+  {
     title: true,
-    name: 'Configurations',
-    icon: 'icon-equalizer'
+    name: 'Configurations'
   },
   {
     name: 'Loan Application',
@@ -29,7 +31,24 @@ export const navItems = [
         icon: 'fa fa-bars'
       }
     ]
-  }
+  },
+  {
+    divider: true
+  },
+  {
+    title: true,
+    name: 'Security'
+  },
+  {
+    name: 'Roles',
+    url: '/security/roles',
+    icon: 'icon-star'
+  },
+  {
+    name: 'Users',
+    url: '/security/users',
+    icon: 'icon-user'
+  },
   // {
   //   name: 'Typography',
   //   url: '/theme/typography',

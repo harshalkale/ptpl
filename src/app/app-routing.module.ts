@@ -15,6 +15,11 @@ const routes: Routes = [
     loadChildren: './configurations/configurations.module#ConfigurationsModule'
   },
   {
+    path: 'security',
+    component: PortalComponent,
+    loadChildren: './security/security.module#SecurityModule'
+  },
+  {
     path: 'loan-applications',
     component: PortalComponent,
     loadChildren:

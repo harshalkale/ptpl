@@ -36,6 +36,10 @@ export class SectionService {
     return this.http.get<Section[]>(this.listUrl);
   }
 
+  filter(searchQuery): Observable<Section[]> {
+    return this.http.post<Section[]>(this.searchUrl, searchQuery);
+  }
+
   findById(id): Observable<Section[]> {
     return this.http.post<Section[]>(this.searchUrl, { id });
   }

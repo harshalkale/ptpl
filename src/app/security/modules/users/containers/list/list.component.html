@@ -1,0 +1,27 @@
+<div class="row my-3">
+  <div class="col-md-9">
+    <h3>Users</h3>
+  </div>
+  <div class="col-md-3">
+    <a [routerLink]="'../add'" class="btn btn-primary shadow btn-block">
+      <i class="fa fa-plus"></i>
+      <span class="mx-2">Add New</span>
+    </a>
+  </div>
+</div>
+<div class="card shadow">
+  <app-datatable-filters [data]="filterData" [handler]="filterHandler" [reset]="filterResetHandler"></app-datatable-filters>
+  <div id="datatableContainer" class="table-responsive p-3" (resized)="onResize($event)">
+    <table class="table table-striped table-bordered table-hover" datatable [dtOptions]="dtOptions">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th></th>
+          <th>Role</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>

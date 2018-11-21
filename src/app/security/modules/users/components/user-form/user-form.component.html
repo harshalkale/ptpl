@@ -1,0 +1,70 @@
+<div class="card shadow">
+  <form [formGroup]="userForm" class="p-2" novalidate (submit)="submitFormHandler()">
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="form-group">
+          <label for="txt-username">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Username</span>
+          </label>
+          <input type="text" id="txt-username" class="form-control" name="username" formControlName="username" />
+          <div class="form-text" *ngIf="username.dirty && username.errors">
+            <small class="text-danger block" *ngIf="username.errors['required']">
+              <b>Username</b> cannot be blank
+            </small>
+            <small class="text-danger block" *ngIf="username.errors['isTaken']">
+              <b>{{ username.value }}</b> is already taken
+            </small>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="!editMode">
+          <label for="txt-password">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Password</span>
+          </label>
+          <input type="password" id="txt-password" class="form-control" name="password" formControlName="password" />
+          <div class="form-text" *ngIf="password.dirty && password.errors">
+            <small class="text-danger block" *ngIf="password.errors['required']">
+              <b>Password</b> cannot be blank
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="txt-password">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Role</span>
+          </label>
+          <select name="role-id" id="ddl-role-id" class="form-control" formControlName="role">
+            <option value=""></option>
+            <option *ngFor="let role of roles" value="{{role._id}}">{{role.name}}</option>
+          </select>
+          <div class="form-text" *ngIf="role.dirty && role.errors">
+            <small class="text-danger block" *ngIf="role.errors['required']">
+              <b>Role</b> cannot be blank
+            </small>
+          </div>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="chk-active" class="form-check-input" name="active" formControlName="active" />
+          <label for="chk-active" class="form-check-label">
+            <span>Active</span>
+          </label>
+        </div>
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            <button class="btn btn-primary btn-sm btn-block shadow" type="submit" [disabled]="userForm.invalid">
+              <i class="fa fa-check"></i> <span class="mx-2">Submit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
