@@ -4,10 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SecurityRoutingModule } from './security-routing.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SecurityRoutingModule
-  ],
+  imports: [CommonModule, SecurityRoutingModule],
   declarations: []
 })
-export class SecurityModule { }
+export class SecurityModule {}

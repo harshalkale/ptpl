@@ -23,11 +23,16 @@ export const navItems = [
       {
         name: 'Types',
         url: '/configurations/loan-application/loan-application-types',
-        icon: 'fa fa-bars'
+        icon: 'fa fa-categories'
       },
       {
         name: 'Sections',
         url: '/configurations/loan-application/sections',
+        icon: 'fa fa-bars'
+      },
+      {
+        name: 'Fields',
+        url: '/configurations/loan-application/fields',
         icon: 'fa fa-bars'
       }
     ]

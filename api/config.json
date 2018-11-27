@@ -1,6 +1,7 @@
 {
   "prod": {},
   "development": {
+    "SECRET": "AbCdEfG",
     "DB": {
       "HOST": "localhost",
       "PORT": "27017",

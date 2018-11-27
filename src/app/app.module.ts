@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import {
   PerfectScrollbarModule,
@@ -30,6 +31,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 
 import { ConfigService } from './shared/services/config.service';
+import { JwtInterceptorService } from './shared/interceptors/jwt-interceptor.service';
+import { ErrorInterceptorService } from './shared/interceptors/error-interceptor.service';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
@@ -51,6 +54,7 @@ export function configServiceFactory(config: ConfigService) {
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     AppHeaderModule,
@@ -69,6 +73,16 @@ export function configServiceFactory(config: ConfigService) {
       provide: APP_INITIALIZER,
       useFactory: configServiceFactory,
       deps: [ConfigService],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptorService,
       multi: true
     },
     {

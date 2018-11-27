@@ -1,10 +1,23 @@
 var ObjectId = require('mongoose').Types.ObjectId;
-var Users = require('./model.js');
-var Audit = require('../../core/logs/audit/service.js');
-var Exception = require('../../core/logs/exception/service.js');
+var Fields = require('./model.js');
+var Audit = require('../../../core/logs/audit/service.js');
+var Exception = require('../../../core/logs/exception/service.js');
 
 var populates = [{
-  path: 'role',
+  path: 'section',
+  match: {
+    active: true,
+    deleted: false
+  },
+  populate: {
+    path: 'loanApplicationTypes',
+    match: {
+      active: true,
+      deleted: false
+    }
+  }
+}, {
+  path: 'loanApplicationTypes',
   match: {
     active: true,
     deleted: false
@@ -28,7 +41,7 @@ module.exports = {
     if (query._lean) lean = query._lean;
     if (query._where) query = query._where;
     if (typeof query.deleted == 'undefined') query.deleted = false;
-    var dbQuery = Users.find(query);
+    var dbQuery = Fields.find(query);
     if (select) dbQuery.select(select);
     if (sort) dbQuery.sort(sort);
     if (limit) dbQuery.limit(limit);
@@ -41,32 +54,20 @@ module.exports = {
       });
     }
 
-    dbQuery.exec((err, users) => err ? callback(err) : callback(null, users.map(user => {
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return {
-        ...userWithoutPassword,
-        username
-      };
-    })));
+    dbQuery.exec(callback);
   },
-  add: function (userData, callback) {
+  add: function (fieldData, callback) {
     var by = {
       by: undefined
     };
-    if (userData.created) by.by = userData.created.by || undefined;
-    Users.create(userData, function (err, user) {
+    if (fieldData.created) by.by = fieldData.created.by || undefined;
+    Fields.create(fieldData, function (err, field) {
       if (err) {
         console.log(err);
         Exception.log(
-          'USER',
+          'FIELD',
           'ADD',
-          'User add Error',
+          'Field add Error',
           err,
           by.by,
           function (err) {
@@ -75,64 +76,73 @@ module.exports = {
         );
         return callback(err);
       }
-      if (!user)
+      if (!field)
         return callback(null, false, {
-          message: 'User not found'
+          message: 'Field not found'
         });
-      Audit.log('USER', 'ADD', 'User added', user, by.by, function (
+      Audit.log('FIELD', 'ADD', 'Field added', field, by.by, function (
         err
       ) {
         if (err) console.log(err);
       });
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return callback(null, {
-        ...userWithoutPassword,
-        username
-      });
+      return callback(null, field);
     });
   },
   dataTable: function (query, callback) {
     var options = {
       conditions: query.conditions || {}
     };
-    var colRoles = query.columns.find(function (column) {
-      return column.data === 'role._id';
+
+    // loan application types filter
+    var colLoanApplicationTypeIds = query.columns.find(function (column) {
+      return column.data === 'loanApplicationTypes._id';
     });
     if (
-      colRoles &&
-      colRoles.search &&
-      colRoles.search.value !== ''
+      colLoanApplicationTypeIds &&
+      colLoanApplicationTypeIds.search &&
+      colLoanApplicationTypeIds.search.value !== ''
     ) {
-      options.conditions['role'] = {
-        $in: colRoles.search.value
+      options.conditions['loanApplicationTypes'] = {
+        $in: colLoanApplicationTypeIds.search.value
           .split(',')
           .map(id => ObjectId(id))
       };
     }
+
+    // section filter
+    var colSection = query.columns.find(function (column) {
+      return column.data === 'section._id';
+    });
+    if (
+      colSection &&
+      colSection.search &&
+      colSection.search.value !== ''
+    ) {
+      options.conditions['section'] = {
+        $in: colSection.search.value
+          .split(',')
+          .map(id => ObjectId(id))
+      };
+    }
+
     if (!options.conditions.deleted) options.conditions.deleted = false;
-    Users.dataTable(query, options, callback);
+    Fields.dataTable(query, options, callback);
   },
-  update: function (userData, callback) {
+  update: function (fieldData, callback) {
     var by = {
       by: undefined
     };
-    if (userData.updated) by.by = userData.updated.by || undefined;
-    Users.findByIdAndUpdate(userData._id, userData, function (
+    if (fieldData.updated) by.by = fieldData.updated.by || undefined;
+    Fields.findByIdAndUpdate(fieldData._id, fieldData, function (
       err,
-      user
+      field
     ) {
       if (err) {
         console.log(err);
         Exception.log(
-          'USER',
+          'FIELD',
           'UPDATE',
-          'User Update Error',
+          'Field Update Error',
           err,
           by.by,
           function (err) {
@@ -142,47 +152,37 @@ module.exports = {
         return callback(err);
       }
       Audit.log(
-        'USER',
+        'FIELD',
         'UPDATE',
-        'User Updated',
-        user,
+        'Field Updated',
+        field,
         by.by,
         function (err) {
           if (err) console.log(err);
         }
       );
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return callback(null, {
-        ...userWithoutPassword,
-        username
-      });
+      return callback(null, field);
     });
   },
-  remove: function (userData, callback) {
+  remove: function (fieldData, callback) {
     var by = {
       by: undefined
     };
-    if (userData.updated) by.by = userData.updated.by || undefined;
-    userData.deleted = true;
-    Users.findByIdAndUpdate(
-      userData._id, {
+    if (fieldData.updated) by.by = fieldData.updated.by || undefined;
+    fieldData.deleted = true;
+    Fields.findByIdAndUpdate(
+      fieldData._id, {
         $set: {
           deleted: true
         }
       },
-      function (err, user) {
+      function (err, field) {
         if (err) {
           console.log(err);
           Exception.log(
-            'USER',
+            'FIELD',
             'DELETE',
-            'User Delete Error',
+            'Field Delete Error',
             err,
             by.by,
             function (err) {
@@ -192,25 +192,16 @@ module.exports = {
           return callback(err);
         }
         Audit.log(
-          'USER',
+          'FIELD',
           'DELETE',
-          'User Deleted',
-          user,
+          'Field Deleted',
+          field,
           by.by,
           function (err) {
             if (err) console.log(err);
           }
         );
-        const {
-          auth: {
-            password
-          },
-          ...userWithoutPassword
-        } = user;
-        return callback(null, {
-          ...userWithoutPassword,
-          username
-        });
+        return callback(null, field);
       }
     );
   }

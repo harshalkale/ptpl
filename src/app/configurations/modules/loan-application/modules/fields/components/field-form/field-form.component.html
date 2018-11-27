@@ -1,0 +1,175 @@
+<div class="alert alert-danger" role="alert" *ngIf="!sectionsList.length">
+  <h4 class="alert-heading">
+    <i class="fa fa-frown-o"></i> Sections not found
+  </h4>
+  <p>You need to have at least one Section configured in the system.</p>
+  <p class="mb-0">
+    Please
+    <a class="alert-link" [routerLink]="'/configurations/loan-application/sections'">click here</a>
+    and Add a new Section
+  </p>
+</div>
+<div class="card shadow" *ngIf="sectionsList.length">
+  <form [formGroup]="fieldForm" class="p-2" novalidate (submit)="submitFormHandler()">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="txt-sequence-no">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Sequence Number</span>
+          </label>
+          <input type="number" class="form-control" id="txt-sequence-no" class="form-control" name="sequenceNo"
+            formControlName="sequenceNo" />
+          <div class="form-text" *ngIf="sequenceNo.dirty && sequenceNo.errors">
+            <small class="text-danger block" *ngIf="sequenceNo.errors['required']">
+              <b>Sequence Number</b> cannot be blank
+            </small>
+            <small class="text-danger block" *ngIf="sequenceNo.errors['isTaken']">
+              <b>{{ sequenceNo.value }}</b> is already taken
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="txt-name">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Label</span>
+          </label>
+          <input type="text" id="txt-label" class="form-control" name="label" formControlName="label" />
+          <div class="form-text" *ngIf="label.dirty && label.errors">
+            <small class="text-danger block" *ngIf="label.errors['required']">
+              <b>Label</b> cannot be blank
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ddl-section">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Section</span>
+          </label>
+          <select name="section" id="ddl-section" class="form-control" formControlName="section" (change)="changeSection($event.target.value)">
+            <option value=""></option>
+            <option *ngFor="let section of sectionsList" value="{{section._id}}">{{ section.name }}</option>
+          </select>
+          <div class="form-text" *ngIf="section.dirty && section.errors">
+            <small class="text-danger block" *ngIf="section.errors['required']">
+              <b>Section</b> cannot be blank
+            </small>
+          </div>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="chk-active" class="form-check-input" name="active" formControlName="active" />
+          <label for="chk-active" class="form-check-label">
+            <span>Active</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group" *ngIf="selectedSection">
+          <label>
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Loan Application Types</span>
+          </label>
+          <ul class="list-group">
+            <li class="list-group-item" formArrayName="loanApplicationTypes" *ngFor="
+                let loanApplicationType of loanApplicationTypes.controls;
+                let i = index
+              ">
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [formControlName]="i" (change)="changeLoanApplicationType()" />
+                  {{ loanApplicationTypesList[i].name }}
+                </label>
+              </div>
+            </li>
+          </ul>
+          <div class="form-text" *ngIf="loanApplicationTypes.dirty && loanApplicationTypes.errors">
+            <small class="text-danger block" *ngIf="loanApplicationTypes.errors['atLeastOneChecked']">
+              Please select at least one <b>Loan Application Type</b>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="selectedLoanApplicationTypes && selectedLoanApplicationTypes.length">
+      <div class="col-md-12">
+        <hr>
+        <div class="row justify-content-end">
+          <div class="col flex">
+            <h5>Options and Score</h5>
+          </div>
+          <div class="col-md-3">
+            <button type="button" class="btn btn-block btn-sm btn-outline-primary" (click)="addNewOption()">
+              <i class="fa fa-plus"></i> <span class="mx-2">Add Option</span>
+            </button>
+          </div>
+        </div>
+        <table class="table table-bordered mt-2">
+          <thead>
+            <tr>
+              <th class="text-center" width="10px">#</th>
+              <th>
+                <small class="mr-2">
+                  <i class="fa fa-asterisk text-danger"></i>
+                </small>
+                <span>Option</span>
+              </th>
+              <th width="30px" *ngFor="let selectedLoanApplicationType of selectedLoanApplicationTypes">
+                {{ selectedLoanApplicationType.name }}
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody formArrayName="options">
+            <tr *ngFor="let option of options.controls; let i = index" [formGroupName]="i">
+              <td class="text-center">
+                {{ (i + 1) }}
+              </td>
+              <td>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="text">
+                  <div class="form-text" *ngIf="option.get('text').dirty && option.get('text').errors">
+                    <small class="text-danger block" *ngIf="option.get('text').errors['required']">
+                      <b>This option</b> cannot be blank
+                    </small>
+                  </div>
+                </div>
+              </td>
+              <td formArrayName="scores" *ngFor="let scoreControl of option.get('scores').controls; let j = index">
+                <div class="form-group" [formGroupName]="j">
+                  <input type="hidden" class="form-control" formControlName="loanApplicationType">
+                  <input type="number" class="form-control" formControlName="score">
+                  <div class="form-text" *ngIf="scoreControl.get('score').dirty && scoreControl.get('score').errors">
+                    <small class="text-danger block" *ngIf="scoreControl.get('score').errors['required']">
+                      <b>This score</b> cannot be blank
+                    </small>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-danger" (click)="removeOption(i)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="row justify-content-end">
+      <div class="col-md-3">
+        <button class="btn btn-primary btn-sm btn-block shadow" type="submit" [disabled]="fieldForm.invalid">
+          <i class="fa fa-check"></i> <span class="mx-2">Submit</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -9,8 +9,11 @@ const routes: Routes = [
   },
   {
     path: 'sections',
-    loadChildren:
-      './modules/sections/sections.module#SectionsModule'
+    loadChildren: './modules/sections/sections.module#SectionsModule'
+  },
+  {
+    path: 'fields',
+    loadChildren: './modules/fields/fields.module#FieldsModule'
   },
   {
     path: '',

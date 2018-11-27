@@ -5,27 +5,28 @@ var config = require('./config.json')[process.env.NODE_ENV || 'development'];
 var mongoose = require('mongoose');
 // mongoose.connect('mongodb://192.168.10.96:27017/loan-scorecard');
 
-var connectionUrl = config.DB.USER
-  ? 'mongodb://' +
-    encodeURIComponent(config.DB.USER) +
-    ':' +
-    encodeURIComponent(config.DB.PASS) +
-    '@' +
-    encodeURIComponent(config.DB.HOST) +
-    ':' +
-    encodeURIComponent(config.DB.PORT) +
-    '/' +
-    encodeURIComponent(config.DB.NAME)
-  : 'mongodb://' +
-    encodeURIComponent(config.DB.HOST) +
-    ':' +
-    encodeURIComponent(config.DB.PORT) +
-    '/' +
-    encodeURIComponent(config.DB.NAME);
+var connectionUrl = config.DB.USER ?
+  'mongodb://' +
+  encodeURIComponent(config.DB.USER) +
+  ':' +
+  encodeURIComponent(config.DB.PASS) +
+  '@' +
+  encodeURIComponent(config.DB.HOST) +
+  ':' +
+  encodeURIComponent(config.DB.PORT) +
+  '/' +
+  encodeURIComponent(config.DB.NAME) :
+  'mongodb://' +
+  encodeURIComponent(config.DB.HOST) +
+  ':' +
+  encodeURIComponent(config.DB.PORT) +
+  '/' +
+  encodeURIComponent(config.DB.NAME);
 
 mongoose.connect(
-  connectionUrl,
-  { useNewUrlParser: true }
+  connectionUrl, {
+    useNewUrlParser: true
+  }
 );
 
 // MONGOOSE DATATABLE
@@ -39,15 +40,17 @@ DataTable.HANDLERS.Boolean =
 mongoose.plugin(DataTable.init);
 
 // EXPRESS
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
+var express = require('express'),
+  bodyParser = require('body-parser'),
+  app = express();
 
 // CORS
 app.use(require('cors')());
 
 // BODY PARSER
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({
+  limit: '50mb'
+}));
 app.use(
   bodyParser.urlencoded({
     limit: '50mb',
@@ -55,7 +58,14 @@ app.use(
   })
 );
 
+// JWT
+var jwt = require('./helpers/jwt');
+app.use(jwt());
+
 // MODULES
+var auth = require('./modules/auth');
+app.use('/auth', auth);
+
 var configurations = require('./modules/configurations');
 app.use('/configurations', configurations);
 
@@ -66,6 +76,6 @@ var user = require('./modules/loan-applications');
 app.use('/loan-applications', user);
 
 // API START
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log('Listening...');
 });

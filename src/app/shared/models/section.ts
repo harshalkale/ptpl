@@ -4,6 +4,6 @@ export interface Section {
   _id?: string;
   sequenceNo: number;
   name: string;
-  loanApplicationTypes?: Array<LoanApplicationType>;
+  loanApplicationTypes: Array<LoanApplicationType>;
   active: boolean;
 }
