@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { DatatableFiltersData } from '../../models/datatable-filters-data';
-import { LoanApplicationType } from '../../../../../../../shared/models/loan-application-type';
-import { Section } from '../../../../../../../shared/models/section';
+import { LoanApplicationType } from '../../../shared/models/loan-application-type';
 
 @Component({
   selector: 'app-datatable-filters',
@@ -26,10 +25,8 @@ export class DatatableFiltersComponent implements OnInit {
   filterHandler() {
     this.filtersApplied = true;
     const formValue = {
-      label: this.datatableFiltersForm.value.label,
-      sections: this.data.sections
-        .filter((section, idx) => this.datatableFiltersForm.value.sections[idx])
-        .map(section => section._id),
+      applicationId: this.datatableFiltersForm.value.applicationId,
+      name: this.datatableFiltersForm.value.name,
       loanApplicationTypes: this.data.loanApplicationTypes
         .filter(
           (loanApplicationType, idx) =>
@@ -56,27 +53,19 @@ export class DatatableFiltersComponent implements OnInit {
 
   ngOnInit() {
     this.datatableFiltersForm = new FormGroup({
-      label: new FormControl(this.data.label),
+      applicationId: new FormControl(this.data.applicationId),
+      name: new FormControl(this.data.name),
       loanApplicationTypes: new FormArray(
         this.data.loanApplicationTypes.map(
           (loanApplicationType: LoanApplicationType, index: number) =>
             new FormControl(false)
         )
       ),
-      sections: new FormArray(
-        this.data.sections.map(
-          (section: Section, index: number) => new FormControl(false)
-        )
-      ),
-      active: new FormControl(this.data.active)
+      // active: new FormControl(this.data.active)
     });
   }
 
   get loanApplicationTypes() {
     return <FormArray>this.datatableFiltersForm.get('loanApplicationTypes');
-  }
-
-  get sections() {
-    return <FormArray>this.datatableFiltersForm.get('sections');
   }
 }

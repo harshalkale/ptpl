@@ -15,27 +15,27 @@ export const navItems = [
     title: true,
     name: 'Configurations'
   },
+  // {
+  //   name: 'Loan Application',
+  //   url: '/configurations/loan-application',
+  //   icon: 'icon-note',
+  //   children: [
   {
-    name: 'Loan Application',
-    url: '/configurations/loan-application',
-    icon: 'icon-note',
-    children: [
-      {
-        name: 'Types',
-        url: '/configurations/loan-application/loan-application-types',
-        icon: 'fa fa-categories'
-      },
-      {
-        name: 'Sections',
-        url: '/configurations/loan-application/sections',
-        icon: 'fa fa-bars'
-      },
-      {
-        name: 'Fields',
-        url: '/configurations/loan-application/fields',
-        icon: 'fa fa-bars'
-      }
-    ]
+    name: 'Loan Appl. Types',
+    url: '/configurations/loan-application/loan-application-types',
+    icon: 'fa fa-files-o'
+  },
+  {
+    name: 'Sections',
+    url: '/configurations/loan-application/sections',
+    icon: 'fa fa-bars'
+  },
+  {
+    name: 'Fields',
+    url: '/configurations/loan-application/fields',
+    icon: 'fa fa-pencil-square-o'
+    //   }
+    // ]
   },
   {
     divider: true
@@ -54,11 +54,18 @@ export const navItems = [
     url: '/security/users',
     icon: 'icon-user'
   },
-  // {
-  //   name: 'Typography',
-  //   url: '/theme/typography',
-  //   icon: 'icon-pencil'
-  // },
+  {
+    divider: true
+  },
+  {
+    title: true,
+    name: 'Loan Applications'
+  },
+  {
+    name: 'Application List',
+    url: '/loan-applications',
+    icon: 'icon-pencil'
+  },
   // {
   //   title: true,
   //   name: 'Components'

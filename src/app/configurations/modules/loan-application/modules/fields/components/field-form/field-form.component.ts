@@ -17,11 +17,14 @@ export class FieldFormComponent implements OnInit {
   @Input() editMode;
 
   fieldForm = new FormGroup({
-    sequenceNo: new FormControl(''),
-    label: new FormControl(''),
-    section: new FormControl(''),
-    loanApplicationTypes: new FormArray([]),
-    active: new FormControl(''),
+    sequenceNo: new FormControl('', [Validators.required]),
+    label: new FormControl('', [Validators.required]),
+    section: new FormControl('', [Validators.required]),
+    loanApplicationTypes: new FormArray(
+      [],
+      [AtLeastOneCheckedValidator.createValidator()]
+    ),
+    active: new FormControl(true),
     options: new FormArray([])
   });
   fieldFormData: Field = {

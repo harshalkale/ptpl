@@ -72,8 +72,8 @@ app.use('/configurations', configurations);
 var security = require('./modules/security');
 app.use('/security', security);
 
-var user = require('./modules/loan-applications');
-app.use('/loan-applications', user);
+var loanApplications = require('./modules/loan-applications');
+app.use('/loan-applications', loanApplications);
 
 // API START
 app.listen(3000, function () {

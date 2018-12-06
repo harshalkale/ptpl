@@ -22,6 +22,12 @@ var populates = [{
     active: true,
     deleted: false
   }
+}, {
+  path: 'options.scores.loanApplicationType',
+  match: {
+    active: true,
+    deleted: false
+  }
 }];
 
 module.exports = {

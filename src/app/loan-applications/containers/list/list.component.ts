@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { ResizedEvent } from 'angular-resize-event/resized-event';
-import { FieldService } from '../../../../../../../shared/services/field/field.service';
+import { LoanApplicationService } from '../../../shared/services/loan-application/loan-application.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { LoanApplicationType } from '../../../../../../../shared/models/loan-application-type';
-import { Section } from '../../../../../../../shared/models/section';
+import { LoanApplicationType } from '../../../shared/models/loan-application-type';
+import { Section } from '../../../shared/models/section';
 import { DatatableFiltersData } from '../../models/datatable-filters-data';
-import { User } from '../../../../../../../shared/models/user';
+import { User } from '../../../shared/models/user';
 
 @Component({
   selector: 'app-list',
@@ -21,27 +21,54 @@ export class ListComponent implements OnInit {
   currentUser: User;
 
   filterData: DatatableFiltersData = {};
-
   filterHandler = (
     filter = {
-      sequenceNo: '',
-      label: '',
-      sections: [],
+      applicationId: '',
+      name: '',
       loanApplicationTypes: [],
       active: ''
     }
   ) => {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      // filter label
-      if (filter.label) {
-        const labelColumn = dtInstance.column('col-label:name');
-        labelColumn.search(filter.label);
+      // filter applicationId
+      if (filter.applicationId) {
+        const applicationIdColumn = dtInstance.column(
+          'col-application-id:name'
+        );
+        applicationIdColumn.search(filter.applicationId);
       }
 
-      // filter sections
-      if (filter.sections) {
-        const sectionIdsColumn = dtInstance.column('col-section-id:name');
-        sectionIdsColumn.search(filter.sections.join(','));
+      // filter name
+      if (filter.name) {
+        const firstNameColumn = dtInstance.column('col-first-name:name'),
+          middleNameColumn = dtInstance.column('col-middle-name:name'),
+          lastNameColumn = dtInstance.column('col-last-name:name'),
+          nameSplit = filter.name.split(' ');
+
+        switch (nameSplit.length) {
+          case 3: {
+            firstNameColumn.search(nameSplit[0]);
+            middleNameColumn.search(nameSplit[1]);
+            lastNameColumn.search(nameSplit[2]);
+            break;
+          }
+          case 2: {
+            firstNameColumn.search(nameSplit[0]);
+            lastNameColumn.search(nameSplit[1]);
+            break;
+          }
+          case 1: {
+            firstNameColumn.search(nameSplit[0]);
+            lastNameColumn.search(nameSplit[0]);
+            break;
+          }
+          default: {
+            firstNameColumn.search(nameSplit.join(' '));
+            middleNameColumn.search(nameSplit.join(' '));
+            lastNameColumn.search(nameSplit.join(' '));
+            break;
+          }
+        }
       }
 
       // filter loan appl types
@@ -75,7 +102,7 @@ export class ListComponent implements OnInit {
   };
 
   constructor(
-    private service: FieldService,
+    private service: LoanApplicationService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -84,17 +111,8 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(
-      (data: {
-        sections: Section[];
-        loanApplicationTypes: LoanApplicationType[];
-      }) => {
-        if (
-          data.sections &&
-          data.sections.length &&
-          data.loanApplicationTypes &&
-          data.loanApplicationTypes.length
-        ) {
-          this.filterData.sections = data.sections;
+      (data: { loanApplicationTypes: LoanApplicationType[] }) => {
+        if (data.loanApplicationTypes && data.loanApplicationTypes.length) {
           this.filterData.loanApplicationTypes = data.loanApplicationTypes;
         }
       }
@@ -128,54 +146,49 @@ export class ListComponent implements OnInit {
       scrollCollapse: true,
       columns: [
         {
-          name: 'col-sequence-no',
-          data: 'sequenceNo',
+          name: 'col-application-id',
+          data: 'applicationId',
           className: 'text-center',
-          width: '5%'
+          width: '15%'
         },
         {
-          name: 'col-label',
-          data: 'label'
+          name: 'col-first-name',
+          data: 'firstName',
+          visible: false
         },
         {
-          name: 'col-section-id',
-          visible: false,
-          data: 'section._id',
-          orderable: false
+          name: 'col-middle-name',
+          data: 'middleName',
+          visible: false
         },
         {
-          name: 'col-section-names',
-          data: 'section.name',
-          orderable: false
+          name: 'col-last-name',
+          data: 'lastName',
+          render: (data, type, row) =>
+            [row.firstName || '', row.middleName || '', row.lastName || '']
+              .filter(s => s)
+              .join(' ')
         },
         {
           name: 'col-loan-application-type-ids',
           visible: false,
-          data: 'loanApplicationTypes._id',
-          orderable: false,
-          render: (data, type, row) =>
-            row.loanApplicationTypes
-              .map(loanApplicationType => loanApplicationType._id)
-              .join(', ')
+          data: 'loanApplicationType._id',
+          orderable: false
         },
         {
           name: 'col-loan-application-type-names',
-          data: 'loanApplicationTypes.name',
-          orderable: false,
-          render: (data, type, row) =>
-            row.loanApplicationTypes
-              .map(loanApplicationType => loanApplicationType.name)
-              .join(', ')
+          data: 'loanApplicationType.name',
+          orderable: false
         },
         {
           name: 'col-active',
           data: 'active',
           className: 'text-center',
-          width: '10%',
           render: (data, type, row) =>
             data
               ? '<span class="text-success">Active</span>'
-              : '<span class="text-danger">Inactive</span>'
+              : '<span class="text-danger">Inactive</span>',
+          width: '15%'
         },
         {
           name: 'col-actions',
@@ -186,17 +199,15 @@ export class ListComponent implements OnInit {
           orderable: false,
           render: (data, type, row) =>
             `
-          <div>
-            <button class="btn btn-sm btn-outline-success" id="btn-view">
-              <i class="fa fa-eye"></i>
-            </button>
-          </div>
+          <button class="btn btn-sm btn-outline-success" id="btn-view">
+            <i class="fa fa-eye"></i>
+          </button>
           ` +
             (this.currentUser.role.canModify
               ? `
-          <button class="btn btn-sm btn-outline-info" id="btn-edit">
+          <!-- <button class="btn btn-sm btn-outline-info" id="btn-edit">
             <i class="fa fa-pencil"></i>
-          </button>
+          </button> -->
           <button class="btn btn-sm btn-outline-danger" id="btn-remove">
             <i class="fa fa-trash"></i>
           </button>
@@ -213,12 +224,12 @@ export class ListComponent implements OnInit {
         });
 
         if (this.currentUser.role.canModify) {
-          $('#btn-edit', row).unbind('click');
-          $('#btn-edit', row).bind('click', () => {
-            self.router.navigate(['../edit', data._id], {
-              relativeTo: self.route
-            });
-          });
+          // $('#btn-edit', row).unbind('click');
+          // $('#btn-edit', row).bind('click', () => {
+          //   self.router.navigate(['../edit', data._id], {
+          //     relativeTo: self.route
+          //   });
+          // });
 
           $('#btn-remove', row).unbind('click');
           $('#btn-remove', row).bind('click', () => {

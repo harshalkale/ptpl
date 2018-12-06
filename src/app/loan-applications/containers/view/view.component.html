@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row my-3">
+    <div class="col-md-9">
+      <h3>View a Loan Application</h3>
+    </div>
+    <div class="col-md-3">
+      <a [routerLink]="'../../list'" class="btn btn-secondary shadow btn-block">
+        <i class="fa fa-arrow-left"></i> <span class="mx-2">Back to list</span>
+      </a>
+    </div>
+  </div>
+
+  <app-loan-application-form [viewMode]="true"></app-loan-application-form>
+</div>

@@ -11,7 +11,11 @@ import { Role } from '../../../../../shared/models/role';
   styleUrls: ['./role-form.component.css']
 })
 export class RoleFormComponent implements OnInit {
-  roleForm: FormGroup;
+  roleForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    canModify: new FormControl(false),
+    active: new FormControl(true)
+  });
   roleFormData: Role = {
     name: '',
     canModify: false,
@@ -36,10 +40,8 @@ export class RoleFormComponent implements OnInit {
             )
           ]
         ),
-        canModify: new FormControl(this.roleFormData.canModify, [
-          Validators.required
-        ]),
-        active: new FormControl(this.roleFormData.active, [Validators.required])
+        canModify: new FormControl(this.roleFormData.canModify),
+        active: new FormControl(this.roleFormData.active)
       });
     });
   }

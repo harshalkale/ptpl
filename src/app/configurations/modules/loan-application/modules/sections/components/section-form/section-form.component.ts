@@ -13,7 +13,15 @@ import { Section } from '../../../../../../../shared/models/section';
   styleUrls: ['./section-form.component.css']
 })
 export class SectionFormComponent implements OnInit {
-  sectionForm: FormGroup;
+  sectionForm = new FormGroup({
+    sequenceNo: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
+    loanApplicationTypes: new FormArray(
+      [],
+      [AtLeastOneCheckedValidator.createValidator()]
+    ),
+    active: new FormControl(true)
+  });
   sectionFormData: Section = {
     sequenceNo: null,
     name: '',
@@ -62,9 +70,7 @@ export class SectionFormComponent implements OnInit {
               ),
               [AtLeastOneCheckedValidator.createValidator()]
             ),
-            active: new FormControl(this.sectionFormData.active, [
-              Validators.required
-            ])
+            active: new FormControl(this.sectionFormData.active)
           });
         }
       }

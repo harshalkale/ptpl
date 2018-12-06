@@ -13,7 +13,12 @@ import { Role } from 'src/app/shared/models/role';
   styleUrls: ['./user-form.component.css']
 })
 export class UserFormComponent implements OnInit {
-  userForm: FormGroup;
+  userForm = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+    role: new FormControl('', [Validators.required]),
+    active: new FormControl(true)
+  });
   userFormData: UserFormData = {
     username: '',
     password: '',
@@ -23,25 +28,25 @@ export class UserFormComponent implements OnInit {
   @Input() submitForm;
   @Input() editMode;
 
-  userData: User;
-
   roles: Role[] = [];
 
   constructor(private service: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.data.subscribe((data: { roles: Role[]; user: User }) => {
-      this.roles = data.roles;
-      if (data.user) {
-        this.userData = data.user;
-        this.userFormData.username = data.user.auth.username;
-        this.userFormData.password = data.user.auth.password;
-        this.userFormData.role = data.user.role._id;
-        this.userFormData.active = data.user.active;
+    this.route.data.subscribe(({ roles, user }) => {
+      this.roles = roles;
+      if (user) {
+        this.userFormData.username = user.auth.username;
+        this.userFormData.password = user.auth.password;
+        this.userFormData.role = user.role._id;
+        this.userFormData.active = user.active;
       }
       this.userForm = new FormGroup({
         username: new FormControl(
-          this.userFormData.username,
+          {
+            value: this.userFormData.username,
+            disabled: !!this.userFormData.username
+          },
           [Validators.required],
           [
             IsUsernameTakenValidator.createValidator(
@@ -50,11 +55,15 @@ export class UserFormComponent implements OnInit {
             )
           ]
         ),
-        password: new FormControl(this.userFormData.password, [
-          Validators.required
-        ]),
+        password: new FormControl(
+          {
+            value: this.userFormData.password,
+            disabled: !!this.userFormData.password
+          },
+          [Validators.required]
+        ),
         role: new FormControl(this.userFormData.role, [Validators.required]),
-        active: new FormControl(this.userFormData.active, [Validators.required])
+        active: new FormControl(this.userFormData.active)
       });
     });
   }
@@ -72,16 +81,14 @@ export class UserFormComponent implements OnInit {
   }
 
   submitFormHandler() {
-    const formValue = this.userForm.value,
-      formData = {
-        ...this.userData,
+    const formData = this.userFormData,
+      formValue = {
+        ...this.userForm.value,
         auth: {
-          username: formValue.username,
-          password: formValue.password
-        },
-        role: formValue.role,
-        active: formValue.active
+          username: this.userForm.value.username || formData.username,
+          password: this.userForm.value.password || formData.password
+        }
       };
-    this.submitForm(formData);
+    this.submitForm(formValue);
   }
 }

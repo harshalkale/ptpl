@@ -41,19 +41,7 @@ module.exports = {
       });
     }
 
-    dbQuery.exec((err, users) => err ? callback(err) : callback(null, users.map(user => {
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return {
-        ...userWithoutPassword,
-        username
-      };
-    })));
+    dbQuery.exec(callback);
   },
   add: function (userData, callback) {
     var by = {
@@ -84,17 +72,7 @@ module.exports = {
       ) {
         if (err) console.log(err);
       });
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return callback(null, {
-        ...userWithoutPassword,
-        username
-      });
+      return callback(null, user);
     });
   },
   dataTable: function (query, callback) {
@@ -151,17 +129,7 @@ module.exports = {
           if (err) console.log(err);
         }
       );
-      const {
-        auth: {
-          username,
-          password
-        },
-        ...userWithoutPassword
-      } = user;
-      return callback(null, {
-        ...userWithoutPassword,
-        username
-      });
+      return callback(null, user);
     });
   },
   remove: function (userData, callback) {
@@ -201,16 +169,7 @@ module.exports = {
             if (err) console.log(err);
           }
         );
-        const {
-          auth: {
-            password
-          },
-          ...userWithoutPassword
-        } = user;
-        return callback(null, {
-          ...userWithoutPassword,
-          username
-        });
+        return callback(null, user);
       }
     );
   }
