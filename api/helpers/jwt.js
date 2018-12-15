@@ -13,7 +13,7 @@ function jwt() {
     secret: SECRET
   }).unless({
     path: [
-      '/auth/login'
+      '/api/auth/login'
     ]
   });
 }

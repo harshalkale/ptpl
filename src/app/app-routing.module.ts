@@ -3,6 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { PortalComponent } from './shared/containers/portal/portal.component';
 import { LoginComponent } from './shared/containers/login/login.component';
+import { environment } from '../environments/environment';
 
 import { AuthGuard } from './shared/guards/auth.guard';
 
@@ -50,7 +51,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
+      // useHash: environment.production
     })
   ],
   exports: [RouterModule]

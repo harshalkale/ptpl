@@ -185,14 +185,7 @@ export class ListComponent implements OnInit {
           searchable: false,
           orderable: false,
           render: (data, type, row) =>
-            `
-          <div>
-            <button class="btn btn-sm btn-outline-success" id="btn-view">
-              <i class="fa fa-eye"></i>
-            </button>
-          </div>
-          ` +
-            (this.currentUser.role.canModify
+            this.currentUser.role.canModify
               ? `
           <button class="btn btn-sm btn-outline-info" id="btn-edit">
             <i class="fa fa-pencil"></i>
@@ -201,17 +194,10 @@ export class ListComponent implements OnInit {
             <i class="fa fa-trash"></i>
           </button>
           `
-              : '')
+              : ''
         }
       ],
       rowCallback: (row, data, index) => {
-        $('#btn-view', row).unbind('click');
-        $('#btn-view', row).bind('click', () => {
-          self.router.navigate(['../view', data._id], {
-            relativeTo: self.route
-          });
-        });
-
         if (this.currentUser.role.canModify) {
           $('#btn-edit', row).unbind('click');
           $('#btn-edit', row).bind('click', () => {

@@ -1,0 +1,12 @@
+{
+  "apps": [{
+    "name": "loan-app-prod",
+    "script": "./index.js",
+    "watch": false,
+    "env": {
+      "NODE_ENV": "prod"
+    },
+    "instances": 4,
+    "exec_mode": "cluster"
+  }]
+}

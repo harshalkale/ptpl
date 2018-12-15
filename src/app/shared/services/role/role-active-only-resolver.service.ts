@@ -14,8 +14,7 @@ import { RoleService } from './role.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RoleActiveOnlyResolverService
-  implements Resolve<Role[]> {
+export class RoleActiveOnlyResolverService implements Resolve<Role[]> {
   constructor(
     private service: RoleService,
     private router: Router,
@@ -28,14 +27,14 @@ export class RoleActiveOnlyResolverService
   ): Observable<Role[]> | Observable<never> {
     return this.service.filter({ active: true }).pipe(
       mergeMap(roles => {
-        if (roles.length) {
-          return of(roles);
-        } else {
-          this.router.navigate(['../list'], {
-            relativeTo: this.activatedRoute
-          });
-          return EMPTY;
-        }
+        // if (roles.length) {
+        return of(roles);
+        // } else {
+        //   this.router.navigate(['../list'], {
+        //     relativeTo: this.activatedRoute
+        //   });
+        //   return EMPTY;
+        // }
       })
     );
   }

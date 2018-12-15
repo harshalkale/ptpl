@@ -4,7 +4,8 @@ import { ResizedEvent } from 'angular-resize-event/resized-event';
 import { UserService } from '../../../../../shared/services/user/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatatableFiltersData } from '../../models/datatable-filters-data';
-import { Role } from 'src/app/shared/models/role';
+import { Role } from '../../../../../shared/models/role';
+import { User } from '../../../../../shared/models/user';
 
 @Component({
   selector: 'app-list',
@@ -16,6 +17,7 @@ export class ListComponent implements OnInit {
   private datatableElement: DataTableDirective;
 
   dtOptions;
+  currentUser: User;
 
   filterData: DatatableFiltersData = {
     username: '',
@@ -65,7 +67,9 @@ export class ListComponent implements OnInit {
     private service: UserService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser')).user;
+  }
 
   ngOnInit() {
     this.route.data.subscribe((data: { roles: Role[] }) => {
@@ -131,32 +135,35 @@ export class ListComponent implements OnInit {
           className: 'text-center',
           searchable: false,
           orderable: false,
-          render: (data, type, row) => `
-          <div>
-            <button class="btn btn-sm btn-outline-info" id="btn-edit">
-              <i class="fa fa-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" id="btn-remove">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
-          `
+          render: (data, type, row) =>
+            this.currentUser.role.canModify
+              ? `
+        <button class="btn btn-sm btn-outline-info" id="btn-edit">
+          <i class="fa fa-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" id="btn-remove">
+          <i class="fa fa-trash"></i>
+        </button>
+        `
+              : ''
         }
       ],
       rowCallback: (row, data, index) => {
-        $('#btn-edit', row).unbind('click');
-        $('#btn-edit', row).bind('click', () => {
-          self.router.navigate(['../edit', data._id], {
-            relativeTo: self.route
+        if (this.currentUser.role.canModify) {
+          $('#btn-edit', row).unbind('click');
+          $('#btn-edit', row).bind('click', () => {
+            self.router.navigate(['../edit', data._id], {
+              relativeTo: self.route
+            });
           });
-        });
 
-        $('#btn-remove', row).unbind('click');
-        $('#btn-remove', row).bind('click', () => {
-          self.router.navigate(['../remove', data._id], {
-            relativeTo: self.route
+          $('#btn-remove', row).unbind('click');
+          $('#btn-remove', row).bind('click', () => {
+            self.router.navigate(['../remove', data._id], {
+              relativeTo: self.route
+            });
           });
-        });
+        }
 
         return row;
       }

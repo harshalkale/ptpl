@@ -1,2 +1,60 @@
-<h1 class="display-4">Hello, world!</h1>
-<p class="lead">This is a simple dashboard page.</p>
+<div class="container mt-3">
+  <p class="lead">Configurations Available</p>
+  <div class="row">
+    <div class="col-md-4">
+      <a class="card text-white bg-primary" [routerLink]="['/configurations/loan-application/loan-application-types']">
+        <div class="card-body">
+          <h4 class="card-title">
+            Loan Appl. Types
+          </h4>
+          <h1 class="display card-text text-right">{{counts.loanApplicationTypes}}</h1>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a class="card text-white bg-success" [routerLink]="['/configurations/loan-application/sections']">
+        <div class="card-body">
+          <h4 class="card-title">
+            Sections
+          </h4>
+          <h1 class="display card-text text-right">{{counts.sections}}</h1>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a class="card text-white bg-warning" [routerLink]="['/configurations/loan-application/fields']">
+        <div class="card-body">
+          <h4 class="card-title">
+            Fields
+          </h4>
+          <h1 class="display card-text text-right">{{counts.fields}}</h1>
+        </div>
+      </a>
+    </div>
+  </div>
+  <hr>
+  <p class="lead">Security Items</p>
+  <div class="row">
+    <div class="col-md-4">
+      <a class="card text-white bg-danger" [routerLink]="['/security/roles']">
+        <div class="card-body">
+          <h4 class="card-title">
+            Roles
+          </h4>
+          <h1 class="display card-text text-right">{{counts.roles}}</h1>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a class="card text-white bg-info" [routerLink]="['/security/users']">
+        <div class="card-body">
+          <h4 class="card-title">
+            Users
+          </h4>
+          <h1 class="display card-text text-right">{{counts.users}}</h1>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>

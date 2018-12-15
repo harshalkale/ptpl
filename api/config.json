@@ -1,6 +1,21 @@
 {
-  "prod": {},
+  "prod": {
+    "PORT": 8080,
+    "SECRET": "AbCdEfG",
+    "DB": {
+      "HOST": "localhost",
+      "PORT": "27017",
+      "NAME": "loan-applications-prod"
+    },
+    "MONGOOSE_DATATABLE": {
+      "OPTIONS": {
+        "debug": false,
+        "verbose": false
+      }
+    }
+  },
   "development": {
+    "PORT": 3000,
     "SECRET": "AbCdEfG",
     "DB": {
       "HOST": "localhost",

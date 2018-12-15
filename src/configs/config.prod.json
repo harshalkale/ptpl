@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "/api"
+    "baseUrl": "/api/"
   },
 
   "debugging": false

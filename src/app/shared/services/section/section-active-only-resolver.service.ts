@@ -27,14 +27,14 @@ export class SectionActiveOnlyResolverService implements Resolve<Section[]> {
   ): Observable<Section[]> | Observable<never> {
     return this.service.filter({ active: true }).pipe(
       mergeMap(sections => {
-        if (sections.length) {
-          return of(sections);
-        } else {
-          this.router.navigate(['../list'], {
-            relativeTo: this.activatedRoute
-          });
-          return EMPTY;
-        }
+        // if (sections.length) {
+        return of(sections);
+        // } else {
+        //   this.router.navigate(['../list'], {
+        //     relativeTo: this.activatedRoute
+        //   });
+        //   return EMPTY;
+        // }
       })
     );
   }

@@ -28,14 +28,14 @@ export class LoanApplicationTypeActiveOnlyResolverService
   ): Observable<LoanApplicationType[]> | Observable<never> {
     return this.service.filter({ active: true }).pipe(
       mergeMap(loanApplicationTypes => {
-        if (loanApplicationTypes.length) {
-          return of(loanApplicationTypes);
-        } else {
-          this.router.navigate(['../list'], {
-            relativeTo: this.activatedRoute
-          });
-          return EMPTY;
-        }
+        // if (loanApplicationTypes.length) {
+        return of(loanApplicationTypes);
+        // } else {
+        //   this.router.navigate(['../list'], {
+        //     relativeTo: this.activatedRoute
+        //   });
+        //   return EMPTY;
+        // }
       })
     );
   }

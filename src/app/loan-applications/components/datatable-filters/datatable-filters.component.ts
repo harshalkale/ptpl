@@ -10,7 +10,11 @@ import { LoanApplicationType } from '../../../shared/models/loan-application-typ
 })
 export class DatatableFiltersComponent implements OnInit {
   @Input()
-  data: DatatableFiltersData;
+  data: DatatableFiltersData = {
+    applicationId: '',
+    loanApplicationTypes: [],
+    name: ''
+  };
 
   @Input()
   handler;
@@ -60,7 +64,7 @@ export class DatatableFiltersComponent implements OnInit {
           (loanApplicationType: LoanApplicationType, index: number) =>
             new FormControl(false)
         )
-      ),
+      )
       // active: new FormControl(this.data.active)
     });
   }

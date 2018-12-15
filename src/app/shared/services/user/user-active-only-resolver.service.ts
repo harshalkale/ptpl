@@ -27,14 +27,14 @@ export class UserActiveOnlyResolverService implements Resolve<User[]> {
   ): Observable<User[]> | Observable<never> {
     return this.service.filter({ active: true }).pipe(
       mergeMap(users => {
-        if (users.length) {
-          return of(users);
-        } else {
-          this.router.navigate(['../list'], {
-            relativeTo: this.activatedRoute
-          });
-          return EMPTY;
-        }
+        // if (users.length) {
+        return of(users);
+        // } else {
+        //   this.router.navigate(['../list'], {
+        //     relativeTo: this.activatedRoute
+        //   });
+        //   return EMPTY;
+        // }
       })
     );
   }

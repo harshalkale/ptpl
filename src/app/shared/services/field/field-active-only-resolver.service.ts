@@ -27,14 +27,14 @@ export class FieldActiveOnlyResolverService implements Resolve<Field[]> {
   ): Observable<Field[]> | Observable<never> {
     return this.service.filter({ active: true }).pipe(
       mergeMap(fields => {
-        if (fields.length) {
-          return of(fields);
-        } else {
-          this.router.navigate(['../list'], {
-            relativeTo: this.activatedRoute
-          });
-          return EMPTY;
-        }
+        // if (fields.length) {
+        return of(fields);
+        // } else {
+        //   this.router.navigate(['../list'], {
+        //     relativeTo: this.activatedRoute
+        //   });
+        // return EMPTY;
+        // }
       })
     );
   }
