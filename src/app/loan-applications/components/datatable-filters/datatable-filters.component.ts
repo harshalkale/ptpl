@@ -10,11 +10,7 @@ import { LoanApplicationType } from '../../../shared/models/loan-application-typ
 })
 export class DatatableFiltersComponent implements OnInit {
   @Input()
-  data: DatatableFiltersData = {
-    applicationId: '',
-    loanApplicationTypes: [],
-    name: ''
-  };
+  data: DatatableFiltersData;
 
   @Input()
   handler;

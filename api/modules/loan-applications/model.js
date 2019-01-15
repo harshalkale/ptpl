@@ -24,9 +24,15 @@ var TXN_LoanApplicationSchema = new Schema({
     type: Boolean,
     default: false
   },
+  coApplicantFirstName: String,
+  coApplicantMiddleName: String,
+  coApplicantLastName: String,
   formData: {
     type: Schema.Types.Mixed,
     required: true
+  },
+  coApplicantFormData: {
+    type: Schema.Types.Mixed
   },
   active: {
     type: Boolean,

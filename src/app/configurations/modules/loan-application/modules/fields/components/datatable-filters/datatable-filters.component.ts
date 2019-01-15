@@ -11,12 +11,7 @@ import { Section } from '../../../../../../../shared/models/section';
 })
 export class DatatableFiltersComponent implements OnInit {
   @Input()
-  data: DatatableFiltersData = {
-    loanApplicationTypes: [],
-    sections: [],
-    active: false,
-    label: ''
-  };
+  data: DatatableFiltersData;
 
   @Input()
   handler;

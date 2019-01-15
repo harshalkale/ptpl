@@ -21,6 +21,7 @@ export class LoanApplicationFormComponent implements OnInit {
 
   applicationMaxScore: number;
   applicationScore: number;
+  coApplicantFlag = false;
 
   loanApplicationForm = new FormGroup({
     applicationId: new FormControl(
@@ -33,10 +34,20 @@ export class LoanApplicationFormComponent implements OnInit {
     firstName: new FormControl('', [Validators.required]),
     middleName: new FormControl(''),
     lastName: new FormControl('', [Validators.required]),
+    coApplicantFirstName: this.coApplicantFlag
+      ? new FormControl('', [Validators.required])
+      : new FormControl(''),
+    coApplicantMiddleName: this.coApplicantFlag
+      ? new FormControl('')
+      : new FormControl(''),
+    coApplicantLastName: this.coApplicantFlag
+      ? new FormControl('', [Validators.required])
+      : new FormControl(''),
     // active: new FormControl('', [
     //   Validators.required
     // ]),
-    formData: new FormArray([])
+    formData: new FormArray([]),
+    coApplicantFormData: new FormArray([])
   });
   loanApplicationFormData: LoanApplicationFormData = {
     applicationId: '',
@@ -44,8 +55,11 @@ export class LoanApplicationFormComponent implements OnInit {
     firstName: '',
     middleName: '',
     lastName: '',
+    coApplicant: this.coApplicantFlag,
+    coApplicantFirstName: '',
+    coApplicantMiddleName: '',
+    coApplicantLastName: '',
     active: true,
-    coApplicant: false,
     formData: null
   };
 
@@ -63,6 +77,57 @@ export class LoanApplicationFormComponent implements OnInit {
     private service: LoanApplicationService,
     private route: ActivatedRoute
   ) {}
+
+  getMaxTotal(formData) {
+    return formData.reduce(
+      (sectionMax, section) =>
+        sectionMax +
+        section.fields.reduce(
+          (fieldMax, field) =>
+            fieldMax +
+            field.options.reduce((optionMax, option) => {
+              const optionScore = (
+                option.scores.find(
+                  score =>
+                    (score.loanApplicationType._id ||
+                      score.loanApplicationType) ===
+                    this.selectedLoanApplicationType._id
+                ) || {}
+              ).score;
+              return optionMax < optionScore ? optionScore : optionMax;
+            }, 0),
+          0
+        ),
+      0
+    );
+  }
+
+  getTotalScore(formData) {
+    return formData.reduce(
+      (sectionTotal, section) =>
+        sectionTotal +
+        section.fields.reduce(
+          (fieldTotal, field) =>
+            fieldTotal +
+            ((
+              (
+                (
+                  field.options.find(
+                    option => option._id === field.selectedOption
+                  ) || {}
+                ).scores || []
+              ).find(
+                score =>
+                  (score.loanApplicationType._id ||
+                    score.loanApplicationType) ===
+                  this.selectedLoanApplicationType._id
+              ) || {}
+            ).score || 0),
+          0
+        ),
+      0
+    );
+  }
 
   ngOnInit() {
     this.route.data.subscribe(
@@ -88,51 +153,15 @@ export class LoanApplicationFormComponent implements OnInit {
             ...theRest
           };
           this.selectedLoanApplicationType = loanApplicationType;
-          this.applicationMaxScore = theRest.formData.reduce(
-            (sectionMax, section) =>
-              sectionMax +
-              section.fields.reduce(
-                (fieldMax, field) =>
-                  fieldMax +
-                  field.options.reduce((optionMax, option) => {
-                    const optionScore = (
-                      option.scores.find(
-                        score =>
-                          (score.loanApplicationType._id ||
-                            score.loanApplicationType) ===
-                          this.selectedLoanApplicationType._id
-                      ) || {}
-                    ).score;
-                    return optionMax < optionScore ? optionScore : optionMax;
-                  }, 0),
-                0
-              ),
-            0
-          );
-          this.applicationScore = theRest.formData.reduce(
-            (sectionTotal, section) =>
-              sectionTotal +
-              section.fields.reduce(
-                (fieldTotal, field) =>
-                  fieldTotal +
-                  ((
-                    (
-                      (
-                        field.options.find(
-                          option => option._id === field.selectedOption
-                        ) || {}
-                      ).scores || []
-                    ).find(
-                      score =>
-                        (score.loanApplicationType._id ||
-                          score.loanApplicationType) ===
-                        this.selectedLoanApplicationType._id
-                    ) || {}
-                  ).score || 0),
-                0
-              ),
-            0
-          );
+          this.applicationMaxScore = this.getMaxTotal(theRest.formData);
+          this.applicationScore = this.getTotalScore(theRest.formData);
+          this.coApplicantFlag = theRest.coApplicant;
+          if (this.coApplicantFlag) {
+            this.applicationScore =
+              (this.applicationScore +
+                this.getMaxTotal(theRest.coApplicantFormData)) /
+              2;
+          }
         }
 
         this.rebuildForm();
@@ -184,10 +213,37 @@ export class LoanApplicationFormComponent implements OnInit {
         },
         [Validators.required]
       ),
+      coApplicantFirstName: this.coApplicantFlag
+        ? new FormControl(
+            {
+              disabled: this.viewMode,
+              value: this.loanApplicationFormData.firstName
+            },
+            [Validators.required]
+          )
+        : new FormControl(''),
+      coApplicantMiddleName: this.coApplicantFlag
+        ? new FormControl({
+            disabled: this.viewMode,
+            value: this.loanApplicationFormData.middleName
+          })
+        : new FormControl(''),
+      coApplicantLastName: this.coApplicantFlag
+        ? new FormControl(
+            {
+              disabled: this.viewMode,
+              value: this.loanApplicationFormData.lastName
+            },
+            [Validators.required]
+          )
+        : new FormControl(''),
       // active: new FormControl(this.loanApplicationFormData.active, [
       //   Validators.required
       // ]),
-      formData: this.getFormDataControl()
+      formData: this.getFormDataControl(),
+      coApplicantFormData: this.coApplicantFlag
+        ? this.getFormDataControl('coApplicantFormData')
+        : new FormArray([])
     });
   }
 
@@ -198,24 +254,78 @@ export class LoanApplicationFormComponent implements OnInit {
       section => this.getFieldsForSection(section).length
     );
     this.loanApplicationForm.setControl('formData', this.getFormDataControl());
+    this.rebuildCoApplicantFormData();
   }
 
-  getFormDataControl() {
-    if (
-      this.loanApplicationFormData.formData &&
-      this.loanApplicationFormData.formData.length
-    ) {
-      this.sectionsForLoanApplicationType = this.loanApplicationFormData.formData.map(
-        section => ({
-          _id: section._id,
-          sequenceNo: section.sequenceNo,
-          loanApplicationTypes: [],
-          name: section.name,
-          active: true
+  rebuildCoApplicantFormData() {
+    if (this.coApplicantFlag) {
+      this.loanApplicationForm.setControl(
+        'coApplicantFormData',
+        this.getFormDataControl('coApplicantFormData')
+      );
+      this.loanApplicationForm.setControl(
+        'coApplicantFirstName',
+        new FormControl(
+          {
+            disabled: this.viewMode,
+            value: this.loanApplicationFormData.coApplicantFirstName
+          },
+          [Validators.required]
+        )
+      );
+      this.loanApplicationForm.setControl(
+        'coApplicantMiddleName',
+        new FormControl({
+          disabled: this.viewMode,
+          value: this.loanApplicationFormData.coApplicantMiddleName
         })
       );
+      this.loanApplicationForm.setControl(
+        'coApplicantLastName',
+        new FormControl(
+          {
+            disabled: this.viewMode,
+            value: this.loanApplicationFormData.coApplicantLastName
+          },
+          [Validators.required]
+        )
+      );
+    } else {
+      this.loanApplicationForm.setControl(
+        'coApplicantFormData',
+        new FormArray([])
+      );
+      this.loanApplicationForm.setControl(
+        'coApplicantFirstName',
+        new FormControl('')
+      );
+      this.loanApplicationForm.setControl(
+        'coApplicantMiddleName',
+        new FormControl('')
+      );
+      this.loanApplicationForm.setControl(
+        'coApplicantLastName',
+        new FormControl('')
+      );
+    }
+  }
+
+  getFormDataControl(type = 'formData') {
+    if (
+      this.loanApplicationFormData[type] &&
+      this.loanApplicationFormData[type].length
+    ) {
+      this.sectionsForLoanApplicationType = this.loanApplicationFormData[
+        type
+      ].map(section => ({
+        _id: section._id,
+        sequenceNo: section.sequenceNo,
+        loanApplicationTypes: [],
+        name: section.name,
+        active: true
+      }));
       this.fieldsForLoanApplicationType = [];
-      this.loanApplicationFormData.formData.forEach(section => {
+      this.loanApplicationFormData[type].forEach(section => {
         this.fieldsForLoanApplicationType = this.fieldsForLoanApplicationType.concat(
           (<any>section).fields.map(field => ({
             _id: field._id,
@@ -262,7 +372,9 @@ export class LoanApplicationFormComponent implements OnInit {
                               .map(
                                 score =>
                                   new FormGroup({
-                                    loanApplicationType: new FormControl(score.loanApplicationType._id),
+                                    loanApplicationType: new FormControl(
+                                      score.loanApplicationType._id
+                                    ),
                                     score: new FormControl(score.score)
                                   })
                               )
@@ -293,6 +405,11 @@ export class LoanApplicationFormComponent implements OnInit {
 
   nextSection() {
     this.selectedSectionIndex++;
+  }
+
+  toggleCoApplicantFlag() {
+    this.coApplicantFlag = !this.coApplicantFlag;
+    this.rebuildCoApplicantFormData();
   }
 
   getFieldsForSection(section) {
@@ -353,12 +470,24 @@ export class LoanApplicationFormComponent implements OnInit {
     return this.loanApplicationForm.get('lastName');
   }
 
+  get coApplicantFirstName() {
+    return this.loanApplicationForm.get('coApplicantFirstName');
+  }
+
+  get coApplicantLastName() {
+    return this.loanApplicationForm.get('coApplicantLastName');
+  }
+
   get loanApplicationType() {
     return this.loanApplicationForm.get('loanApplicationType');
   }
 
   get formData() {
     return <FormArray>this.loanApplicationForm.get('formData');
+  }
+
+  get coApplicantFormData() {
+    return <FormArray>this.loanApplicationForm.get('coApplicantFormData');
   }
 
   submitFormHandler() {

@@ -63,35 +63,13 @@ app.use(bodyParser.urlencoded({
 
 // WEB PROD
 if (isProd) {
-  // Allowed extensions list can be extended depending on your own needs
-  const allowedExt = [
-    '.js',
-    '.ico',
-    '.css',
-    '.png',
-    '.jpg',
-    '.woff2',
-    '.woff',
-    '.ttf',
-    '.svg',
-  ];
-
-  // Redirect all the other resquests
-  app.get('*', (req, res) => {
-    if (allowedExt.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
-      res.sendFile(path.resolve(`public/${req.url}`));
-    } else {
-      res.sendFile(path.resolve('public/index.html'));
+  var fs = require('fs');
+  app.get(/^((?!(\/api\/)).)*$/, (req, res, next) => {
+    if (fs.existsSync(__dirname + '/public' + req.path)) {
+      return next();
     }
-  });
-
-  // var fs = require('fs');
-  // app.get(/^((?!(\/api\/)).)*$/, (req, res, next) => {
-  //   if (fs.existsSync(__dirname + '/public' + req.url)) {
-  //     return next();
-  //   }
-  //   res.sendFile(__dirname + '/public/index.html');
-  // }, express.static(__dirname + '/public'));
+    res.sendFile(__dirname + '/public/index.html');
+  }, express.static(__dirname + '/public'));
 }
 
 // API
@@ -160,7 +138,7 @@ checkForUserAccount = (roleId) => {
         console.log('User created...');
       })
     } else {
-      console.log('User found...');
+      console.log('User found... Let\'s go!');
     }
   })
 }

@@ -20,7 +20,12 @@ export class ListComponent implements OnInit {
   dtOptions;
   currentUser: User;
 
-  filterData: DatatableFiltersData = {};
+  filterData: DatatableFiltersData = {
+    applicationId: '',
+    loanApplicationTypes: [],
+    name: ''
+  };
+
   filterHandler = (
     filter = {
       applicationId: '',

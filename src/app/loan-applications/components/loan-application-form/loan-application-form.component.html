@@ -1,16 +1,32 @@
-<div class="alert alert-danger" role="alert" *ngIf="!loanApplicationTypesList.length">
+<div
+  class="alert alert-danger"
+  role="alert"
+  *ngIf="!loanApplicationTypesList.length"
+>
   <h4 class="alert-heading">
     <i class="fa fa-frown-o"></i> Loan Application Types not found
   </h4>
-  <p>You need to have at least one Loan Application Type configured in the system.</p>
+  <p>
+    You need to have at least one Loan Application Type configured in the
+    system.
+  </p>
   <p class="mb-0">
     Please
-    <a class="alert-link" [routerLink]="'/configurations/loan-application/loan-application-types'">click here</a>
+    <a
+      class="alert-link"
+      [routerLink]="'/configurations/loan-application/loan-application-types'"
+      >click here</a
+    >
     and Add a new Loan Application Type
   </p>
 </div>
 <div class="card shadow" *ngIf="loanApplicationTypesList.length">
-  <form [formGroup]="loanApplicationForm" class="p-2" novalidate (submit)="submitFormHandler()">
+  <form
+    [formGroup]="loanApplicationForm"
+    class="p-2"
+    novalidate
+    (submit)="submitFormHandler()"
+  >
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
@@ -20,15 +36,29 @@
             </small>
             <span>Loan Application Type</span>
           </label>
-          <select name="loan-application-type" id="ddl-loan-application-type" class="form-control" formControlName="loanApplicationType"
-            (change)="changeLoanApplicationType($event.target.value)">
+          <select
+            name="loan-application-type"
+            id="ddl-loan-application-type"
+            class="form-control"
+            formControlName="loanApplicationType"
+            (change)="changeLoanApplicationType($event.target.value)"
+          >
             <option value=""></option>
-            <option *ngFor="let loanApplication of loanApplicationTypesList" value="{{loanApplication._id}}">
-              {{loanApplication.name}}
+            <option
+              *ngFor="let loanApplication of loanApplicationTypesList"
+              value="{{ loanApplication._id }}"
+            >
+              {{ loanApplication.name }}
             </option>
           </select>
-          <div class="form-text" *ngIf="loanApplicationType.dirty && loanApplicationType.errors">
-            <small class="text-danger block" *ngIf="loanApplicationType.errors['atLeastOneChecked']">
+          <div
+            class="form-text"
+            *ngIf="loanApplicationType.dirty && loanApplicationType.errors"
+          >
+            <small
+              class="text-danger block"
+              *ngIf="loanApplicationType.errors['atLeastOneChecked']"
+            >
               <b>Loan Application Type</b> cannot be blank
             </small>
           </div>
@@ -42,21 +72,39 @@
             </small>
             <span>Application ID</span>
           </label>
-          <input type="text" class="form-control" id="txt-application-id" class="form-control" name="applicationId"
-            formControlName="applicationId" />
-          <div class="form-text" *ngIf="applicationId.dirty && applicationId.errors">
-            <small class="text-danger block" *ngIf="applicationId.errors['required']">
+          <input
+            type="text"
+            class="form-control"
+            id="txt-application-id"
+            class="form-control"
+            name="applicationId"
+            formControlName="applicationId"
+          />
+          <div
+            class="form-text"
+            *ngIf="applicationId.dirty && applicationId.errors"
+          >
+            <small
+              class="text-danger block"
+              *ngIf="applicationId.errors['required']"
+            >
               <b>Application ID</b> cannot be blank
             </small>
-            <small class="text-danger block" *ngIf="applicationId.errors['isTaken']">
+            <small
+              class="text-danger block"
+              *ngIf="applicationId.errors['isTaken']"
+            >
               <b>{{ applicationId.value }}</b> is already taken
             </small>
           </div>
         </div>
       </div>
       <div class="col-md 4" *ngIf="viewMode">
-        <p class="lead">Total Score</p>
-        <h1>{{applicationScore}} / <small>{{applicationMaxScore}}</small></h1>
+        <p class="lead">{{ coApplicantFlag ? 'Cumulative' : 'Total' }} Score</p>
+        <h1>
+          {{ applicationScore }}
+          <small class="text-secondary">/ {{ applicationMaxScore }}</small>
+        </h1>
       </div>
     </div>
     <p class="lead">Applicant Name</p>
@@ -69,10 +117,19 @@
             </small>
             <span>First Name</span>
           </label>
-          <input type="text" class="form-control" id="txt-first-name" class="form-control" name="firstName"
-            formControlName="firstName" />
+          <input
+            type="text"
+            class="form-control"
+            id="txt-first-name"
+            class="form-control"
+            name="firstName"
+            formControlName="firstName"
+          />
           <div class="form-text" *ngIf="firstName.dirty && firstName.errors">
-            <small class="text-danger block" *ngIf="firstName.errors['required']">
+            <small
+              class="text-danger block"
+              *ngIf="firstName.errors['required']"
+            >
               <b>First Name</b> cannot be blank
             </small>
           </div>
@@ -80,11 +137,15 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label for="txt-middle-name">
-            <span>Middle Name</span>
-          </label>
-          <input type="text" class="form-control" id="txt-middle-name" class="form-control" name="middleName"
-            formControlName="middleName" />
+          <label for="txt-middle-name"> <span>Middle Name</span> </label>
+          <input
+            type="text"
+            class="form-control"
+            id="txt-middle-name"
+            class="form-control"
+            name="middleName"
+            formControlName="middleName"
+          />
         </div>
       </div>
       <div class="col-md-4">
@@ -95,10 +156,19 @@
             </small>
             <span>Last Name</span>
           </label>
-          <input type="text" class="form-control" id="txt-last-name" class="form-control" name="lastName"
-            formControlName="lastName" />
+          <input
+            type="text"
+            class="form-control"
+            id="txt-last-name"
+            class="form-control"
+            name="lastName"
+            formControlName="lastName"
+          />
           <div class="form-text" *ngIf="lastName.dirty && lastName.errors">
-            <small class="text-danger block" *ngIf="lastName.errors['required']">
+            <small
+              class="text-danger block"
+              *ngIf="lastName.errors['required']"
+            >
               <b>Last Name</b> cannot be blank
             </small>
           </div>
@@ -115,59 +185,256 @@
     </div> -->
       <div class="col-md-4">
         <div class="form-check">
-          <input type="checkbox" id="chk-co-applicant" class="form-check-input" name="co-applicant" formControlName="coApplicant" />
+          <input
+            type="checkbox"
+            id="chk-co-applicant"
+            class="form-check-input"
+            name="co-applicant"
+            formControlName="coApplicant"
+            (change)="toggleCoApplicantFlag()"
+          />
           <label for="chk-co-applicant" class="form-check-label">
             <span>Co-applicant</span>
           </label>
         </div>
       </div>
     </div>
-    <hr>
-    <div *ngIf="selectedLoanApplicationType && fieldsForLoanApplicationType.length">
+    <div *ngIf="coApplicantFlag">
+      <br />
+      <p class="lead">Co Applicant Name</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="txt-co-applicant-first-name">
+              <small class="mr-2">
+                <i class="fa fa-asterisk text-danger"></i>
+              </small>
+              <span>First Name</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="txt-co-applicant-first-name"
+              class="form-control"
+              name="coApplicantFirstName"
+              formControlName="coApplicantFirstName"
+            />
+            <div
+              class="form-text"
+              *ngIf="coApplicantFirstName.dirty && coApplicantFirstName.errors"
+            >
+              <small
+                class="text-danger block"
+                *ngIf="coApplicantFirstName.errors['required']"
+              >
+                <b>First Name</b> cannot be blank
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="txt-co-applicant-middle-name">
+              <span>Middle Name</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="txt-co-applicant-middle-name"
+              class="form-control"
+              name="coApplicantMiddleName"
+              formControlName="coApplicantMiddleName"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="txt-co-applicant-last-name">
+              <small class="mr-2">
+                <i class="fa fa-asterisk text-danger"></i>
+              </small>
+              <span>Last Name</span>
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="txt-co-applicant-last-name"
+              class="form-control"
+              name="coApplicantLastName"
+              formControlName="coApplicantLastName"
+            />
+            <div
+              class="form-text"
+              *ngIf="coApplicantLastName.dirty && coApplicantLastName.errors"
+            >
+              <small
+                class="text-danger block"
+                *ngIf="coApplicantLastName.errors['required']"
+              >
+                <b>Last Name</b> cannot be blank
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div
+      *ngIf="selectedLoanApplicationType && fieldsForLoanApplicationType.length"
+    >
       <div class="row">
         <div class="col-sm-3">
-          <button type="button" class="btn btn-sm btn-block btn-outline-secondary" [disabled]="selectedSectionIndex === 0"
-            (click)="prevSection()">
+          <button
+            type="button"
+            class="btn btn-sm btn-block btn-outline-secondary"
+            [disabled]="selectedSectionIndex === 0"
+            (click)="prevSection()"
+          >
             <i class="fa fa-arrow-left"></i>
-            <span class="mx-2 d-none d-md-inline-block">
-              Previous
-            </span>
+            <span class="mx-2 d-none d-md-inline-block"> Previous </span>
           </button>
         </div>
         <div class="col-sm-6 text-center">
-          <p class="lead">
+          <h3>
             {{ sectionsForLoanApplicationType[selectedSectionIndex].name }}
-          </p>
+          </h3>
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-sm btn-block btn-outline-secondary" [disabled]="selectedSectionIndex === (sectionsForLoanApplicationType.length - 1)"
-            (click)="nextSection()">
-            <span class="mx-2 d-none d-md-inline-block">
-              Next
-            </span>
+          <button
+            type="button"
+            class="btn btn-sm btn-block btn-outline-secondary"
+            [disabled]="
+              selectedSectionIndex === sectionsForLoanApplicationType.length - 1
+            "
+            (click)="nextSection()"
+          >
+            <span class="mx-2 d-none d-md-inline-block"> Next </span>
             <i class="fa fa-arrow-right"></i>
           </button>
         </div>
       </div>
-      <div formArrayName="formData" *ngFor="let sectionGroup of formData.controls; let sectionIdx = index" [hidden]="selectedSectionIndex !== sectionIdx">
+      <br />
+      <div
+        formArrayName="formData"
+        *ngFor="let sectionGroup of formData.controls; let sectionIdx = index"
+        [hidden]="selectedSectionIndex !== sectionIdx"
+      >
         <div class="row" [formGroupName]="sectionIdx">
-          <div class="col-md-4" formArrayName="fields" *ngFor="let fieldGroup of sectionGroup.get('fields').controls; let fieldIdx = index">
+          <div
+            class="col-md-4"
+            formArrayName="fields"
+            *ngFor="
+              let fieldGroup of sectionGroup.get('fields').controls;
+              let fieldIdx = index
+            "
+          >
             <div class="form-group" [formGroupName]="fieldIdx">
               <label>
                 <small class="mr-2">
                   <i class="fa fa-asterisk text-danger"></i>
                 </small>
-                <span>{{getFieldsForSection(sectionsForLoanApplicationType[sectionIdx])[fieldIdx].label}}</span>
+                <span>{{
+                  getFieldsForSection(
+                    sectionsForLoanApplicationType[sectionIdx]
+                  )[fieldIdx].label
+                }}</span>
               </label>
-              <select name="{{getFieldIdentifier(getFieldsForSection(sectionsForLoanApplicationType[sectionIdx])[fieldIdx])}}"
-                id="ddl-{{getFieldIdentifier(getFieldsForSection(sectionsForLoanApplicationType[sectionIdx])[fieldIdx])}}"
-                class="form-control" formControlName="selectedOption">
+              <select
+                name="{{
+                  getFieldIdentifier(
+                    getFieldsForSection(
+                      sectionsForLoanApplicationType[sectionIdx]
+                    )[fieldIdx]
+                  )
+                }}"
+                id="ddl-{{
+                  getFieldIdentifier(
+                    getFieldsForSection(
+                      sectionsForLoanApplicationType[sectionIdx]
+                    )[fieldIdx]
+                  )
+                }}"
+                class="form-control"
+                formControlName="selectedOption"
+              >
                 <option value=""></option>
-                <option *ngFor="let option of getFieldsForSection(sectionsForLoanApplicationType[sectionIdx])[fieldIdx].options"
-                  value="{{option._id}}">
-                  {{option.text}}
+                <option
+                  *ngFor="
+                    let option of getFieldsForSection(
+                      sectionsForLoanApplicationType[sectionIdx]
+                    )[fieldIdx].options
+                  "
+                  value="{{ option._id }}"
+                >
+                  {{ option.text }}
                 </option>
               </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="coApplicantFlag">
+        <hr />
+        <p class="lead">Co Applicant Form</p>
+        <div
+          formArrayName="coApplicantFormData"
+          *ngFor="
+            let sectionGroup of coApplicantFormData.controls;
+            let sectionIdx = index
+          "
+          [hidden]="selectedSectionIndex !== sectionIdx"
+        >
+          <div class="row" [formGroupName]="sectionIdx">
+            <div
+              class="col-md-4"
+              formArrayName="fields"
+              *ngFor="
+                let fieldGroup of sectionGroup.get('fields').controls;
+                let fieldIdx = index
+              "
+            >
+              <div class="form-group" [formGroupName]="fieldIdx">
+                <label>
+                  <small class="mr-2">
+                    <i class="fa fa-asterisk text-danger"></i>
+                  </small>
+                  <span>{{
+                    getFieldsForSection(
+                      sectionsForLoanApplicationType[sectionIdx]
+                    )[fieldIdx].label
+                  }}</span>
+                </label>
+                <select
+                  name="{{
+                    getFieldIdentifier(
+                      getFieldsForSection(
+                        sectionsForLoanApplicationType[sectionIdx]
+                      )[fieldIdx]
+                    )
+                  }}"
+                  id="ddl-{{
+                    getFieldIdentifier(
+                      getFieldsForSection(
+                        sectionsForLoanApplicationType[sectionIdx]
+                      )[fieldIdx]
+                    )
+                  }}"
+                  class="form-control"
+                  formControlName="selectedOption"
+                >
+                  <option value=""></option>
+                  <option
+                    *ngFor="
+                      let option of getFieldsForSection(
+                        sectionsForLoanApplicationType[sectionIdx]
+                      )[fieldIdx].options
+                    "
+                    value="{{ option._id }}"
+                  >
+                    {{ option.text }}
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -175,7 +442,11 @@
     </div>
     <div class="row justify-content-end" *ngIf="!viewMode">
       <div class="col-md-3">
-        <button class="btn btn-primary btn-sm btn-block shadow" type="submit" [disabled]="loanApplicationForm.invalid">
+        <button
+          class="btn btn-primary btn-sm btn-block shadow"
+          type="submit"
+          [disabled]="loanApplicationForm.invalid"
+        >
           <i class="fa fa-check"></i> <span class="mx-2">Submit</span>
         </button>
       </div>
