@@ -135,7 +135,7 @@ checkForUserAccount = (roleId) => {
           console.log('Error saving user: ', err);
           return;
         }
-        console.log('User created...');
+        console.log('User created... Let\'s Go!');
       })
     } else {
       console.log('User found... Let\'s go!');
