@@ -2,6 +2,7 @@ export interface LoanApplicationFormData {
   _id?: string;
   applicationId: string;
   loanApplicationType: string;
+  loanApplicationTypeName: string;
   firstName: string;
   middleName: string;
   lastName: string;

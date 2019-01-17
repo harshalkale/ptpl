@@ -1,0 +1,152 @@
+<div class="card shadow">
+  <div id="printable" class="m-3">
+    <div class="d-md-flex align-items-center mb-3">
+      <p class="mb-0 lead flex-grow-1">Financial Appraisal of Loan</p>
+      <div class="d-flex align-items-center">
+        <small class="flex-grow-1 text-info noprint"
+          >Please use Chrome for best results</small
+        >
+        <button
+          class="btn btn-sm btn-outline-success ml-2 noprint"
+          (click)="print()"
+        >
+          <i class="fa fa-print"></i> <span class="ml-2">Print</span>
+        </button>
+      </div>
+    </div>
+    <hr />
+    <div id="scrollable">
+      <table class="table table-borderless">
+        <tr>
+          <td width="35%">Loan Application No.</td>
+          <td width="45%">
+            <b>{{ loanApplication.applicationId }}</b>
+          </td>
+          <td width="20%" rowspan="2" class="text-center">
+            {{
+              loanApplication.coApplicant ? 'Cumulative' : 'Appliation'
+            }}
+            Score
+            <h1 *ngIf="!loanApplication.coApplicant">
+              <b>{{ fullTotal['formData'] }}</b>
+              <small> / {{ fullMaxTotal }}</small>
+            </h1>
+            <h1 *ngIf="loanApplication.coApplicant">
+              <b>{{
+                (fullTotal['formData'] + fullTotal['coApplicantFormData']) / 2
+              }}</b>
+              <small> / {{ fullMaxTotal }}</small>
+            </h1>
+          </td>
+        </tr>
+        <tr>
+          <td width="35%">Loan Type</td>
+          <td width="45%">
+            <b>{{ loanApplication.loanApplicationTypeName }}</b>
+          </td>
+        </tr>
+      </table>
+
+      <p *ngIf="loanApplication.coApplicant" class="lead text-center">
+        PRIMARY APPLICANT
+      </p>
+
+      <table class="table table-bordered">
+        <tr>
+          <td colspan="2">Name</td>
+          <td>{{ buildName() }}</td>
+        </tr>
+        <tr *ngFor="let item of formDatatable['formData']; let i = index">
+          <!-- type = section -->
+          <td *ngIf="item.type === 'section'" colspan="3">
+            <b>{{ item.name }}</b>
+          </td>
+          <!-- type = field -->
+          <td *ngIf="item.type === 'field'" width="5%" class="text-right">
+            {{ item.sequenceNo }}
+          </td>
+          <td *ngIf="item.type === 'field'" width="30%">{{ item.label }}</td>
+          <td *ngIf="item.type === 'field'">{{ item.selectedOption }}</td>
+        </tr>
+        <tr>
+          <td colspan="3"><b>SUMMARY</b></td>
+        </tr>
+        <tr *ngFor="let item of sectionTotals['formData']; let i = index">
+          <td width="5%" class="text-right">
+            <b>{{ item.sequenceNo }}</b>
+          </td>
+          <td width="30%">
+            <b>{{ item.name }}</b>
+          </td>
+          <td>
+            <b>{{ item.total }}</b>
+            <small> / {{ sectionMaxTotals['formData'][i].total }}</small>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="text-right"><b>TOTAL</b></td>
+          <td>
+            <b>{{ fullTotal['formData'] }}</b>
+            <small> / {{ fullMaxTotal }}</small>
+          </td>
+        </tr>
+      </table>
+
+      <div *ngIf="loanApplication.coApplicant">
+        <p class="lead text-center">CO APPLICANT</p>
+        <table class="table table-bordered">
+          <tr *ngIf="loanApplication.coApplicant">
+            <td colspan="2">Name</td>
+            <td>{{ buildName('coApplicant') }}</td>
+          </tr>
+          <tr
+            *ngFor="
+              let item of formDatatable['coApplicantFormData'];
+              let i = index
+            "
+          >
+            <!-- type = section -->
+            <td *ngIf="item.type === 'section'" colspan="3">
+              <b>{{ item.name }}</b>
+            </td>
+            <!-- type = field -->
+            <td *ngIf="item.type === 'field'" width="5%" class="text-right">
+              {{ item.sequenceNo }}
+            </td>
+            <td *ngIf="item.type === 'field'" width="30%">{{ item.label }}</td>
+            <td *ngIf="item.type === 'field'">{{ item.selectedOption }}</td>
+          </tr>
+          <tr *ngIf="loanApplication.coApplicant">
+            <td colspan="3"><b>SUMMARY</b></td>
+          </tr>
+          <tr
+            *ngFor="
+              let item of sectionTotals['coApplicantFormData'];
+              let i = index
+            "
+          >
+            <td width="5%" class="text-right">
+              <b>{{ item.sequenceNo }}</b>
+            </td>
+            <td width="30%">
+              <b>{{ item.name }}</b>
+            </td>
+            <td>
+              <b>{{ item.total }}</b>
+              <small>
+                / {{ sectionMaxTotals['coApplicantFormData'][i].total }}</small
+              >
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-right"><b>TOTAL</b></td>
+            <td>
+              <b>{{ fullTotal['coApplicantFormData'] }}</b>
+              <small> / {{ fullMaxTotal }}</small>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

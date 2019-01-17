@@ -23,7 +23,7 @@
 <div class="card shadow" *ngIf="loanApplicationTypesList.length">
   <form
     [formGroup]="loanApplicationForm"
-    class="p-2"
+    class="p-3"
     novalidate
     (submit)="submitFormHandler()"
   >
@@ -453,3 +453,9 @@
     </div>
   </form>
 </div>
+
+<app-confirmation-modal
+  *ngIf="showConfirmationModal"
+  [confirmSubmitHandler]="confirmSubmitHandler"
+  [cancelSubmitHandler]="cancelSubmitHandler"
+></app-confirmation-modal>

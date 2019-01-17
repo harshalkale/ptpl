@@ -4,6 +4,7 @@ export interface LoanApplication {
   _id?: string;
   applicationId: string;
   loanApplicationType: LoanApplicationType;
+  loanApplicationTypeName: string;
   firstName: string;
   middleName: string;
   lastName: string;

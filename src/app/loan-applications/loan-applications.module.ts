@@ -17,6 +17,8 @@ import { ViewComponent } from './containers/view/view.component';
 
 import { DatatableFiltersComponent } from './components/datatable-filters/datatable-filters.component';
 import { LoanApplicationFormComponent } from './components/loan-application-form/loan-application-form.component';
+import { LoanApplicationPrintComponent } from './components/loan-application-print/loan-application-print.component';
+import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ import { LoanApplicationFormComponent } from './components/loan-application-form
     RemoveComponent,
     ViewComponent,
     DatatableFiltersComponent,
-    LoanApplicationFormComponent
+    LoanApplicationFormComponent,
+    LoanApplicationPrintComponent,
+    ConfirmationModalComponent
   ]
 })
 export class LoanApplicationsModule {}

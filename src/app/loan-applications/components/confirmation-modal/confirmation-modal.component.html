@@ -1,0 +1,50 @@
+<div
+  aria-hidden="false"
+  aria-labelledby="myModalLabel"
+  class="modal fade in show"
+  role="dialog"
+  tabindex="-1"
+  aria-modal="true"
+  style="display: block;"
+>
+  <div class="modal-dialog modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Form Submission?</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="cancelSubmit()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to submit the application?</p>
+        <p class="text-secondary">
+          Once you submit, you would not be able to make changes to the
+          application form.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelSubmit()"
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirmSubmit()"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

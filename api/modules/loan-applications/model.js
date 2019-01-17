@@ -11,6 +11,10 @@ var TXN_LoanApplicationSchema = new Schema({
     ref: 'TXN_LoanApplicationType',
     required: true
   },
+  loanApplicationTypeName: {
+    type: String,
+    required: true
+  },
   firstName: {
     type: String,
     required: true

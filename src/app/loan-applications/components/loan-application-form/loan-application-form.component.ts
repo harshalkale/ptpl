@@ -22,6 +22,7 @@ export class LoanApplicationFormComponent implements OnInit {
   applicationMaxScore: number;
   applicationScore: number;
   coApplicantFlag = false;
+  showConfirmationModal = false;
 
   loanApplicationForm = new FormGroup({
     applicationId: new FormControl(
@@ -52,6 +53,7 @@ export class LoanApplicationFormComponent implements OnInit {
   loanApplicationFormData: LoanApplicationFormData = {
     applicationId: '',
     loanApplicationType: '',
+    loanApplicationTypeName: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -78,7 +80,7 @@ export class LoanApplicationFormComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  getMaxTotal(formData) {
+  getMaxTotal = formData => {
     return formData.reduce(
       (sectionMax, section) =>
         sectionMax +
@@ -100,9 +102,9 @@ export class LoanApplicationFormComponent implements OnInit {
         ),
       0
     );
-  }
+  };
 
-  getTotalScore(formData) {
+  getTotalScore = formData => {
     return formData.reduce(
       (sectionTotal, section) =>
         sectionTotal +
@@ -127,7 +129,7 @@ export class LoanApplicationFormComponent implements OnInit {
         ),
       0
     );
-  }
+  };
 
   ngOnInit() {
     this.route.data.subscribe(
@@ -135,7 +137,7 @@ export class LoanApplicationFormComponent implements OnInit {
         loanApplicationTypes: LoanApplicationType[];
         sections: Section[];
         fields: Field[];
-        loanApplication: LoanApplication;
+        loanApplication;
       }) => {
         if (data.loanApplicationTypes && data.loanApplicationTypes.length) {
           this.loanApplicationTypesList = data.loanApplicationTypes;
@@ -148,11 +150,24 @@ export class LoanApplicationFormComponent implements OnInit {
         }
         if (data.loanApplication) {
           const { loanApplicationType, ...theRest } = data.loanApplication;
-          this.loanApplicationFormData = {
-            loanApplicationType: loanApplicationType._id,
-            ...theRest
-          };
-          this.selectedLoanApplicationType = loanApplicationType;
+          if (loanApplicationType && loanApplicationType._id) {
+            this.loanApplicationFormData = {
+              loanApplicationType: loanApplicationType._id,
+              loanApplicationTypeName: loanApplicationType.name,
+              ...theRest
+            };
+            this.selectedLoanApplicationType = loanApplicationType;
+          } else {
+            this.loanApplicationFormData = {
+              loanApplicationType: `${loanApplicationType || ''}`,
+              ...theRest
+            };
+            this.selectedLoanApplicationType = loanApplicationType || {
+              _id: this.loanApplicationFormData.loanApplicationType,
+              name: this.loanApplicationFormData.loanApplicationTypeName,
+              active: true
+            };
+          }
           this.applicationMaxScore = this.getMaxTotal(theRest.formData);
           this.applicationScore = this.getTotalScore(theRest.formData);
           this.coApplicantFlag = theRest.coApplicant;
@@ -490,11 +505,23 @@ export class LoanApplicationFormComponent implements OnInit {
     return <FormArray>this.loanApplicationForm.get('coApplicantFormData');
   }
 
-  submitFormHandler() {
+  confirmSubmitHandler = () => {
     const formData = {
       ...this.loanApplicationFormData,
       ...this.loanApplicationForm.value
     };
+    if (!formData.loanApplicationTypeName) {
+      formData.loanApplicationTypeName = this.selectedLoanApplicationType.name;
+    }
     this.submitForm(formData);
+    this.showConfirmationModal = false;
+  };
+
+  cancelSubmitHandler = () => {
+    this.showConfirmationModal = false;
+  };
+
+  submitFormHandler() {
+    this.showConfirmationModal = true;
   }
 }

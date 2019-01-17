@@ -1,0 +1,7 @@
+#printable > #scrollable {
+    overflow: auto;
+}
+
+#printable > #scrollable > table {
+    min-width: 720px !important;
+}

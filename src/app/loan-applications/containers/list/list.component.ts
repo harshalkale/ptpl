@@ -182,7 +182,7 @@ export class ListComponent implements OnInit {
         },
         {
           name: 'col-loan-application-type-names',
-          data: 'loanApplicationType.name',
+          data: 'loanApplicationTypeName',
           orderable: false
         },
         {
@@ -210,9 +210,6 @@ export class ListComponent implements OnInit {
           ` +
             (this.currentUser.role.canModify
               ? `
-          <!-- <button class="btn btn-sm btn-outline-info" id="btn-edit">
-            <i class="fa fa-pencil"></i>
-          </button> -->
           <button class="btn btn-sm btn-outline-danger" id="btn-remove">
             <i class="fa fa-trash"></i>
           </button>
@@ -229,13 +226,6 @@ export class ListComponent implements OnInit {
         });
 
         if (this.currentUser.role.canModify) {
-          // $('#btn-edit', row).unbind('click');
-          // $('#btn-edit', row).bind('click', () => {
-          //   self.router.navigate(['../edit', data._id], {
-          //     relativeTo: self.route
-          //   });
-          // });
-
           $('#btn-remove', row).unbind('click');
           $('#btn-remove', row).bind('click', () => {
             self.router.navigate(['../remove', data._id], {

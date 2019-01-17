@@ -1,64 +1,77 @@
-<div class="container">
-
-  <div class="row my-3">
-    <div class="col-md-9">
-      <h3>Modify a Loan Application Type</h3>
-    </div>
-    <div class="col-md-3">
-      <a [routerLink]="'../../list'" class="btn btn-secondary shadow btn-block">
-        <i class="fa fa-arrow-left"></i>
-        <span class="mx-2">Back to list</span>
-      </a>
-    </div>
+<div class="row my-3">
+  <div class="col-md-9"><h3>Modify a Loan Application Type</h3></div>
+  <div class="col-md-3">
+    <a [routerLink]="'../../list'" class="btn btn-secondary shadow btn-block">
+      <i class="fa fa-arrow-left"></i> <span class="mx-2">Back to list</span>
+    </a>
   </div>
+</div>
 
-  <div class="card shadow">
-    <form [formGroup]="applicationTypeForm" class="p-2" novalidate (submit)="submitForm()">
-      <div class="row">
-        <div class="col-md-6 mx-auto">
-          <div class="form-group">
-            <label for="txt-name">
-              <small class="mr-2">
-                <i class="fa fa-asterisk text-danger"></i>
-              </small>
-              <span>Name</span>
-            </label>
-            <input type="text" id="txt-name" class="form-control" name="name" formControlName="name">
-            <div class="form-text" *ngIf="name.dirty && name.errors">
-              <small class="text-danger block" *ngIf="name.errors['required']">
-                <b>Name</b> cannot be blank
-              </small>
-              <small class="text-danger block" *ngIf="name.errors['isTaken']">
-                <b>{{name.value}}</b> is already taken
-              </small>
-            </div>
+<div class="card shadow">
+  <form
+    [formGroup]="applicationTypeForm"
+    class="p-2"
+    novalidate
+    (submit)="submitForm()"
+  >
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="form-group">
+          <label for="txt-name">
+            <small class="mr-2">
+              <i class="fa fa-asterisk text-danger"></i>
+            </small>
+            <span>Name</span>
+          </label>
+          <input
+            type="text"
+            id="txt-name"
+            class="form-control"
+            name="name"
+            formControlName="name"
+          />
+          <div class="form-text" *ngIf="name.dirty && name.errors">
+            <small class="text-danger block" *ngIf="name.errors['required']">
+              <b>Name</b> cannot be blank
+            </small>
+            <small class="text-danger block" *ngIf="name.errors['isTaken']">
+              <b>{{ name.value }}</b> is already taken
+            </small>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mx-auto">
-          <div class="form-check">
-            <input type="checkbox" id="chk-active" class="form-check-input" name="active" formControlName="active">
-            <label for="chk-active" class="form-check-label">
-              <span>Active</span>
-            </label>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            id="chk-active"
+            class="form-check-input"
+            name="active"
+            formControlName="active"
+          />
+          <label for="chk-active" class="form-check-label">
+            <span>Active</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mx-auto">
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            <button
+              class="btn btn-primary btn-sm btn-block shadow"
+              type="submit"
+              [disabled]="applicationTypeForm.invalid"
+            >
+              <i class="fa fa-check"></i> <span class="mx-2">Submit</span>
+            </button>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mx-auto">
-          <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-6">
-              <button class="btn btn-primary btn-sm btn-block shadow" type="submit" [disabled]="applicationTypeForm.invalid">
-                <i class="fa fa-check"></i>
-                <span class="mx-2">Submit</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-
+    </div>
+  </form>
 </div>
