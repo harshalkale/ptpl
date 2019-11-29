@@ -15,26 +15,26 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: PortalComponent,
-    loadChildren: './dashboard/dashboard.module#DashboardModule',
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'configurations',
     component: PortalComponent,
-    loadChildren: './configurations/configurations.module#ConfigurationsModule',
+    loadChildren: () => import('./configurations/configurations.module').then(m => m.ConfigurationsModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'security',
     component: PortalComponent,
-    loadChildren: './security/security.module#SecurityModule',
+    loadChildren: () => import('./security/security.module').then(m => m.SecurityModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'loan-applications',
     component: PortalComponent,
     loadChildren:
-      './loan-applications/loan-applications.module#LoanApplicationsModule',
+      () => import('./loan-applications/loan-applications.module').then(m => m.LoanApplicationsModule),
     canActivate: [AuthGuard]
   },
   {

@@ -5,15 +5,15 @@ const routes: Routes = [
   {
     path: 'loan-application-types',
     loadChildren:
-      './modules/loan-application-types/loan-application-types.module#LoanApplicationTypesModule'
+      () => import('./modules/loan-application-types/loan-application-types.module').then(m => m.LoanApplicationTypesModule)
   },
   {
     path: 'sections',
-    loadChildren: './modules/sections/sections.module#SectionsModule'
+    loadChildren: () => import('./modules/sections/sections.module').then(m => m.SectionsModule)
   },
   {
     path: 'fields',
-    loadChildren: './modules/fields/fields.module#FieldsModule'
+    loadChildren: () => import('./modules/fields/fields.module').then(m => m.FieldsModule)
   },
   {
     path: '',

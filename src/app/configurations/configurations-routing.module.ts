@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: 'loan-application',
     loadChildren:
-      './modules/loan-application/loan-application.module#LoanApplicationModule'
+      () => import('./modules/loan-application/loan-application.module').then(m => m.LoanApplicationModule)
   },
   {
     path: '',
