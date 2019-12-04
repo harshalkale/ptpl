@@ -1,19 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
-import { ResizedEvent } from 'angular-resize-event/resized-event';
-import { SectionService } from '../../../../../../../shared/services/section/section.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LoanApplicationType } from '../../../../../../../shared/models/loan-application-type';
-import { DatatableFiltersData } from '../../models/datatable-filters-data';
-import { User } from '../../../../../../../shared/models/user';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { DataTableDirective } from "angular-datatables";
+import { ResizedEvent } from "angular-resize-event";
+import { SectionService } from "../../../../../../../shared/services/section/section.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { LoanApplicationType } from "../../../../../../../shared/models/loan-application-type";
+import { DatatableFiltersData } from "../../models/datatable-filters-data";
+import { User } from "../../../../../../../shared/models/user";
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  selector: "app-list",
+  templateUrl: "./list.component.html",
+  styleUrls: ["./list.component.css"]
 })
 export class ListComponent implements OnInit {
-  @ViewChild(DataTableDirective)
+  @ViewChild(DataTableDirective, { static: false })
   private datatableElement: DataTableDirective;
 
   dtOptions;
@@ -22,35 +22,35 @@ export class ListComponent implements OnInit {
   filterData: DatatableFiltersData = {
     loanApplicationTypes: [],
     active: false,
-    name: ''
+    name: ""
   };
   filterHandler = (
     filter = {
-      name: '',
+      name: "",
       loanApplicationTypes: [],
-      active: ''
+      active: ""
     }
   ) => {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // filter name
       if (filter.name) {
-        const nameColumn = dtInstance.column('col-name:name');
+        const nameColumn = dtInstance.column("col-name:name");
         nameColumn.search(filter.name);
       }
 
       // filter loan appl types
       if (filter.loanApplicationTypes) {
         const loanApplicationTypeIdsColumn = dtInstance.column(
-          'col-loan-application-type-ids:name'
+          "col-loan-application-type-ids:name"
         );
         loanApplicationTypeIdsColumn.search(
-          filter.loanApplicationTypes.join(',')
+          filter.loanApplicationTypes.join(",")
         );
       }
 
       // filter status
       if (filter.active) {
-        const activeColumn = dtInstance.column('col-active:name');
+        const activeColumn = dtInstance.column("col-active:name");
         activeColumn.search(filter.active);
       }
 
@@ -72,7 +72,7 @@ export class ListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser')).user;
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser")).user;
   }
 
   ngOnInit() {
@@ -101,60 +101,60 @@ export class ListComponent implements OnInit {
     const self = this;
     this.dtOptions = {
       autoWidth: false,
-      pagingType: 'full_numbers',
+      pagingType: "full_numbers",
       serverSide: true,
       processing: true,
       ajax: (dataTablesParameters: any, callback) => {
         self.service.getDataTable(dataTablesParameters).subscribe(callback);
       },
       scrollX: true,
-      scrollY: '500px',
+      scrollY: "500px",
       scrollCollapse: true,
       columns: [
         {
-          name: 'col-sequence-no',
-          data: 'sequenceNo',
-          className: 'text-center',
-          width: '10%'
+          name: "col-sequence-no",
+          data: "sequenceNo",
+          className: "text-center",
+          width: "10%"
         },
         {
-          name: 'col-name',
-          data: 'name'
+          name: "col-name",
+          data: "name"
         },
         {
-          name: 'col-loan-application-type-ids',
+          name: "col-loan-application-type-ids",
           visible: false,
-          data: 'loanApplicationTypes._id',
+          data: "loanApplicationTypes._id",
           orderable: false,
           render: (data, type, row) =>
             row.loanApplicationTypes
               .map(loanApplicationType => loanApplicationType._id)
-              .join(', ')
+              .join(", ")
         },
         {
-          name: 'col-loan-application-type-names',
-          data: 'loanApplicationTypes.name',
+          name: "col-loan-application-type-names",
+          data: "loanApplicationTypes.name",
           orderable: false,
           render: (data, type, row) =>
             row.loanApplicationTypes
               .map(loanApplicationType => loanApplicationType.name)
-              .join(', ')
+              .join(", ")
         },
         {
-          name: 'col-active',
-          data: 'active',
-          className: 'text-center',
+          name: "col-active",
+          data: "active",
+          className: "text-center",
           render: (data, type, row) =>
             data
               ? '<span class="text-success">Active</span>'
               : '<span class="text-danger">Inactive</span>',
-          width: '15%'
+          width: "15%"
         },
         {
-          name: 'col-actions',
-          data: '_id',
-          width: '15%',
-          className: 'text-center',
+          name: "col-actions",
+          data: "_id",
+          width: "15%",
+          className: "text-center",
           searchable: false,
           orderable: false,
           render: (data, type, row) =>
@@ -167,21 +167,21 @@ export class ListComponent implements OnInit {
             <i class="fa fa-trash"></i>
           </button>
           `
-              : ''
+              : ""
         }
       ],
       rowCallback: (row, data, index) => {
         if (this.currentUser.role.canModify) {
-          $('#btn-edit', row).unbind('click');
-          $('#btn-edit', row).bind('click', () => {
-            self.router.navigate(['../edit', data._id], {
+          $("#btn-edit", row).unbind("click");
+          $("#btn-edit", row).bind("click", () => {
+            self.router.navigate(["../edit", data._id], {
               relativeTo: self.route
             });
           });
 
-          $('#btn-remove', row).unbind('click');
-          $('#btn-remove', row).bind('click', () => {
-            self.router.navigate(['../remove', data._id], {
+          $("#btn-remove", row).unbind("click");
+          $("#btn-remove", row).bind("click", () => {
+            self.router.navigate(["../remove", data._id], {
               relativeTo: self.route
             });
           });
@@ -203,18 +203,18 @@ export class ListComponent implements OnInit {
         dtInstance.columns.adjust();
       }
       if (options.clearSearch) {
-        dtInstance.columns().search('');
+        dtInstance.columns().search("");
         dtInstance.draw();
       }
     });
   }
 
   scrollToDatatable() {
-    $('html, body').animate(
+    $("html, body").animate(
       {
-        scrollTop: $('#datatableContainer').offset().top - 20
+        scrollTop: $("#datatableContainer").offset().top - 20
       },
-      'slow'
+      "slow"
     );
   }
 }

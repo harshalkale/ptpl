@@ -1,5 +1,5 @@
 {
-  "prod": {
+  "production": {
     "PORT": 8080,
     "SECRET": "AbCdEfG",
     "DB": {

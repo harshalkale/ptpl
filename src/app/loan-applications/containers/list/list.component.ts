@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
-import { ResizedEvent } from 'angular-resize-event/resized-event';
+import { ResizedEvent } from 'angular-resize-event';
 import { LoanApplicationService } from '../../../shared/services/loan-application/loan-application.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoanApplicationType } from '../../../shared/models/loan-application-type';
@@ -14,7 +14,7 @@ import { User } from '../../../shared/models/user';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  @ViewChild(DataTableDirective)
+  @ViewChild(DataTableDirective, { static: false })
   private datatableElement: DataTableDirective;
 
   dtOptions;

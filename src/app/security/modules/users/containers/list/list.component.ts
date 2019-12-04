@@ -1,52 +1,52 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableDirective } from 'angular-datatables';
-import { ResizedEvent } from 'angular-resize-event/resized-event';
-import { UserService } from '../../../../../shared/services/user/user.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { DatatableFiltersData } from '../../models/datatable-filters-data';
-import { Role } from '../../../../../shared/models/role';
-import { User } from '../../../../../shared/models/user';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { DataTableDirective } from "angular-datatables";
+import { ResizedEvent } from "angular-resize-event";
+import { UserService } from "../../../../../shared/services/user/user.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { DatatableFiltersData } from "../../models/datatable-filters-data";
+import { Role } from "../../../../../shared/models/role";
+import { User } from "../../../../../shared/models/user";
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  selector: "app-list",
+  templateUrl: "./list.component.html",
+  styleUrls: ["./list.component.css"]
 })
 export class ListComponent implements OnInit {
-  @ViewChild(DataTableDirective)
+  @ViewChild(DataTableDirective, { static: false })
   private datatableElement: DataTableDirective;
 
   dtOptions;
   currentUser: User;
 
   filterData: DatatableFiltersData = {
-    username: '',
+    username: "",
     roles: [],
     active: null
   };
   filterHandler = (
     filter = {
-      username: '',
-      role: '',
-      active: ''
+      username: "",
+      role: "",
+      active: ""
     }
   ) => {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // filter username
       if (filter.username) {
-        const usernameColumn = dtInstance.column('col-username:name');
+        const usernameColumn = dtInstance.column("col-username:name");
         usernameColumn.search(filter.username);
       }
 
       // filter role
       if (filter.role) {
-        const roleColumn = dtInstance.column('col-role-id:name');
+        const roleColumn = dtInstance.column("col-role-id:name");
         roleColumn.search(filter.role);
       }
 
       // filter status
       if (filter.active) {
-        const activeColumn = dtInstance.column('col-active:name');
+        const activeColumn = dtInstance.column("col-active:name");
         activeColumn.search(filter.active);
       }
 
@@ -68,7 +68,7 @@ export class ListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser')).user;
+    this.currentUser = JSON.parse(localStorage.getItem("currentUser")).user;
   }
 
   ngOnInit() {
@@ -95,44 +95,44 @@ export class ListComponent implements OnInit {
     const self = this;
     this.dtOptions = {
       autoWidth: false,
-      pagingType: 'full_numbers',
+      pagingType: "full_numbers",
       serverSide: true,
       processing: true,
       ajax: (dataTablesParameters: any, callback) => {
         self.service.getDataTable(dataTablesParameters).subscribe(callback);
       },
       scrollX: true,
-      scrollY: '500px',
+      scrollY: "500px",
       scrollCollapse: true,
       columns: [
         {
-          name: 'col-username',
-          data: 'auth.username'
+          name: "col-username",
+          data: "auth.username"
         },
         {
-          name: 'col-role-id',
-          data: 'role._id',
+          name: "col-role-id",
+          data: "role._id",
           visible: false
         },
         {
-          name: 'col-role',
-          data: 'role.name'
+          name: "col-role",
+          data: "role.name"
         },
         {
-          name: 'col-active',
-          data: 'active',
-          className: 'text-center',
+          name: "col-active",
+          data: "active",
+          className: "text-center",
           render: (data, type, row) =>
             data
               ? '<span class="text-success">Active</span>'
               : '<span class="text-danger">Inactive</span>',
-          width: '15%'
+          width: "15%"
         },
         {
-          name: 'col-actions',
-          data: '_id',
-          width: '15%',
-          className: 'text-center',
+          name: "col-actions",
+          data: "_id",
+          width: "15%",
+          className: "text-center",
           searchable: false,
           orderable: false,
           render: (data, type, row) =>
@@ -145,21 +145,21 @@ export class ListComponent implements OnInit {
           <i class="fa fa-trash"></i>
         </button>
         `
-              : ''
+              : ""
         }
       ],
       rowCallback: (row, data, index) => {
         if (this.currentUser.role.canModify) {
-          $('#btn-edit', row).unbind('click');
-          $('#btn-edit', row).bind('click', () => {
-            self.router.navigate(['../edit', data._id], {
+          $("#btn-edit", row).unbind("click");
+          $("#btn-edit", row).bind("click", () => {
+            self.router.navigate(["../edit", data._id], {
               relativeTo: self.route
             });
           });
 
-          $('#btn-remove', row).unbind('click');
-          $('#btn-remove', row).bind('click', () => {
-            self.router.navigate(['../remove', data._id], {
+          $("#btn-remove", row).unbind("click");
+          $("#btn-remove", row).bind("click", () => {
+            self.router.navigate(["../remove", data._id], {
               relativeTo: self.route
             });
           });
@@ -181,18 +181,18 @@ export class ListComponent implements OnInit {
         dtInstance.columns.adjust();
       }
       if (options.clearSearch) {
-        dtInstance.columns().search('');
+        dtInstance.columns().search("");
         dtInstance.draw();
       }
     });
   }
 
   scrollToDatatable() {
-    $('html, body').animate(
+    $("html, body").animate(
       {
-        scrollTop: $('#datatableContainer').offset().top - 20
+        scrollTop: $("#datatableContainer").offset().top - 20
       },
-      'slow'
+      "slow"
     );
   }
 }
