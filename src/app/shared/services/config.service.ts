@@ -1,5 +1,6 @@
+
+import {throwError as observableThrowError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
@@ -24,7 +25,7 @@ export class ConfigService {
           .get('/configs/config.' + env_data.env + '.json')
           .pipe(
             catchError((error: any) => {
-              return Observable.throw(error.json().error || 'Server error');
+              return observableThrowError(error.json().error || 'Server error');
             })
           )
           .subscribe(data => {
